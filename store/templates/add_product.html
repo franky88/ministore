@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<h2>Add product</h2>
+
+{% for product in products %}
+
+    {{forloop.counter}} {{ product.name }} | <a href="{% url 'store:delete_product' product.pk %}">Delete</a><br>
+
+{% endfor %}
+<form action="" method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="add">
+</form>
+
+{% endblock %}
