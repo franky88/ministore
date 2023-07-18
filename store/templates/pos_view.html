@@ -2,7 +2,122 @@
 
 
 {% block content %}
+<div class="row">
+    <div class="col-sm-6">
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header">
+                <strong>Cart items</strong>
+                <a href="{% url 'store:clear_order' %}" class="btn btn-outline-danger btn-sm border-0 shadow-sm float-end">Clear cart</a>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Particulars</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart %}
+                            {% with product=item.product %}
+                            <tr>
+                                <td>{{product.name|title}}</td>
+                                <td>PHP {{product.price}}</td>
+                                <td>
+                                    <form action="{% url 'store:update_quantity' product.bar_code %}" method="post">
+                                        {% csrf_token %}
+                                        <div class="input-group">
+                                            {% if not product.is_serial %}
+                                            <input style="width: 40px;" value="{{ item.update_quantity_form.quantity }}" min="1" type="number" name="number" class="form-control form-control-sm" placeholder="Quantity" aria-label="quantity" aria-describedby="button-addon2">
+                                            <button class="btn btn-outline-success btn-sm" type="submit" id="button-addon2">Update</button>
+                                            {% else %}
+                                            {{ item.update_quantity_form.quantity }}
+                                            {% endif %}
+                                        </div>
+                                    </form>
+                                </td>
+                                <td>
+                                    <a href="#" title="Remove" class="btn btn-outline-danger btn-sm border-0 shadow-sm"><i class="fa-regular fa-trash-can"></i></a>
+                                </td>
+                            </tr>
+                            {% endwith %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div>
+                    <h3>Total: PHP {{ cart.get_total_price  }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header">
+                <strong>Order details</strong>
+                <a href="" class="btn btn-outline-primary btn-sm border-0 shadow-sm float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">Add customer</a>
+            </div>
+            <div class="card-body">
+                <form action="{% url 'store:process_order' %}" method="POST">
+                    {% csrf_token %}
+                    <select class="form-select" aria-label="Default select example" name="customer_01">
+                        {% for customer in customers %}
+                        <option>{{customer}}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="form-floating mt-3 mb-3">
+                        <input type="number" class="form-control" name="moneytender" id="floatingInput" placeholder="Name">
+                        <label for="floatingInput">Money tender</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="is_paid" id="flexRadioDefault1">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                          Paid in cash
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="is_paid" id="flexRadioDefault2" checked>
+                        <label class="form-check-label" for="flexRadioDefault2">
+                          Unpaid
+                        </label>
+                    </div>
+                    <input type="submit" value="Confirm order" class="btn btn-primary border-0 shadow-sm mt-4">
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+  
+  <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add customer</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{% url 'store:add_customer' %}" method="POST">
+        {% csrf_token %}
+        <div class="modal-body">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" name="name" id="floatingInput" placeholder="Name">
+                <label for="floatingInput">Name</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" class="form-control" name="contact" id="floatingContact" placeholder="Contact">
+                <label for="floatingContact">Contact</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary btn-sm border-0 shadow-sm" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-outline-primary btn-sm border-0 shadow-sm">Add customer</button>
+        </div>
+        </form>
+      </div>
+    </div>
+</div>
 
-<h2>POS View</h2>
 
 {% endblock %}

@@ -2,17 +2,78 @@
 
 
 {% block content %}
-<h2>Add product</h2>
+<div class="row">
+    <div class="col-sm-3">
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header">
+                <strong>Add product</strong>
+            </div>
+            <div class="card-body">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <input type="submit" value="add" class="btn btn-outline-primary btn-sm">
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-9">
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header">
+                <strong>Products</strong>
+            </div>
+            <div class="card-body">
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    {% for product in products %}
+                    <div class="col">
+                      <div class="card">
+                        <!-- <img src="..." class="card-img-top" alt="..."> -->
+                        <div class="card-body">
+                          <h5 class="card-title">{{ product.name|title }}</h5>
+                          <div class="row">
+                            <div class="col-sm-6">
+                                <div class="card border-primary">
+                                    <div class="card-body p-1">
+                                        <small>On stock:</small><br>
+                                        <strong>{{ product.quantity }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="card border-info">
+                                    <div class="card-body p-1">
+                                        <small>Price:</small><br>
+                                        <strong>PHP {{ product.price }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+                          {% if not product.quantity %}
+                          <small class="text-muted">Out of stock, stocking soon!</small>
+                          {% endif %}
+                        </div>
+                        <div class="card-footer pt-1 pb-1">
+                            {% if product.quantity %}
+                            <a href="{% url 'store:delete_product' product.pk %}" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-trash-can"></i></a>
+                            <a href="{% url 'store:delete_product' product.pk %}" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="{% url 'store:add_order' product.pk %}" class="btn btn-outline-info btn-sm float-end border-0 shadow-sm">Add to <i class="fa-solid fa-cart-plus"></i></a>
+                            {% else %}
+                            <div>
+                                <a href="{% url 'store:delete_product' product.pk %}" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-trash-can"></i></a>
+                                <a href="{% url 'store:add_order' product.pk %}" class="btn btn-outline-info btn-sm border-0 shadow-sm">Request</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+</div>
 
-{% for product in products %}
-
-    {{forloop.counter}} {{ product.name }} | <a href="{% url 'store:delete_product' product.pk %}">Delete</a><br>
-
-{% endfor %}
-<form action="" method="POST">
-    {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" value="add">
-</form>
 
 {% endblock %}
