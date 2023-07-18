@@ -10,6 +10,9 @@
             <a class="nav-link active" aria-current="page" href="{% url 'store:add_product' %}">Products</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'store:order_view' %}">Orders</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'store:pos_view' %}">Cart {% if cart_items > 1 %}items <span class="badge text-bg-success"> {{ cart_items }}{% else %}item <span class="badge text-bg-secondary"> {{ cart_items }}{% endif %}</span></a>
           </li>
         </ul>

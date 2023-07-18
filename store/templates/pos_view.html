@@ -67,19 +67,13 @@
                         {% endfor %}
                     </select>
                     <div class="form-floating mt-3 mb-3">
-                        <input type="number" class="form-control" name="moneytender" id="floatingInput" placeholder="Name">
+                        <input type="number" class="form-control" min="0" value="0" name="moneytender" id="floatingInput" placeholder="Name">
                         <label for="floatingInput">Money tender</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="is_paid" id="flexRadioDefault1">
-                        <label class="form-check-label" for="flexRadioDefault1">
-                          Paid in cash
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="is_paid" id="flexRadioDefault2" checked>
-                        <label class="form-check-label" for="flexRadioDefault2">
-                          Unpaid
+                        <input class="form-check-input" type="checkbox" name="is_paid" value="on" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Paid
                         </label>
                     </div>
                     <input type="submit" value="Confirm order" class="btn btn-primary border-0 shadow-sm mt-4">

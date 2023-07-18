@@ -60,13 +60,18 @@ def cart_updated(request, bar_code):
 @require_POST
 def order_transaction(request):
     cart = Cart(request)
-    print(cart.get_total_price)
+    print(cart.get_total_price())
     if request.method == 'POST':
         customer = request.POST.get('customer_01')
         cus = get_object_or_404(Customer, name=customer)
         money = request.POST.get('moneytender')
         is_paid = request.POST.get('is_paid')
-        print(customer)
+        # paid = False
+        if is_paid == None:
+            paid = False
+        else:
+            paid = True
+        print(is_paid)
         for item in cart:
             order = OrderTransaction(
                 customer = cus,
@@ -74,8 +79,8 @@ def order_transaction(request):
                 price = item['price'],
                 quantity = item['quantity'],
                 money_tender = money,
-                total_amount = cart.get_total_price,
-                is_paid = is_paid
+                total_amount = cart.get_total_price(),
+                is_paid = paid
             )
             order.save()
         cart.clear()

@@ -51,7 +51,7 @@ class OrderTransaction(models.Model):
     price = models.FloatField()
     quantity = models.PositiveIntegerField()
     total_amount = models.FloatField()
-    money_tender = models.FloatField(default=0.0)
+    money_tender = models.FloatField()
     is_paid = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
