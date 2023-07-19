@@ -22,25 +22,13 @@ def product_order_view(request):
     }
     return render(request, 'pos_view.html', context)
 
-@require_POST
-def add_customer_view(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        contact = request.POST.get('contact')
-        customer = Customer(
-            name=name,
-            contact=contact
-        )
-        customer.save()
-        return redirect('store:pos_view')
-
 def add_order_view(request, pk):
     cart = Cart(request)
     product = get_object_or_404(Product, pk=pk)
     if product.quantity > 1:
         pass
     cart.add(product=product, quantity=1, update_quantity=False)
-    return redirect('store:add_product')
+    return redirect('store:product_view')
 
 def clear_cart_items(request):
     cart = Cart(request)
@@ -82,6 +70,8 @@ def order_transaction(request):
                 total_amount = cart.get_total_price(),
                 is_paid = paid
             )
+            order.product.quantity -= order.quantity
+            order.product.save()
             order.save()
         cart.clear()
         return redirect('store:pos_view')

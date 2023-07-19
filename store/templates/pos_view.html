@@ -10,7 +10,7 @@
                 <a href="{% url 'store:clear_order' %}" class="btn btn-outline-danger btn-sm border-0 shadow-sm float-end">Clear cart</a>
             </div>
             <div class="card-body">
-                <table class="table">
+                <table class="table table-sm">
                     <thead>
                         <tr>
                             <th>Particulars</th>
@@ -66,11 +66,7 @@
                         <option>{{customer}}</option>
                         {% endfor %}
                     </select>
-                    <div class="form-floating mt-3 mb-3">
-                        <input type="number" class="form-control" min="0" value="0" name="moneytender" id="floatingInput" placeholder="Name">
-                        <label for="floatingInput">Money tender</label>
-                    </div>
-                    <div class="form-check">
+                    <div class="form-check mt-3">
                         <input class="form-check-input" type="checkbox" name="is_paid" value="on" id="flexCheckDefault">
                         <label class="form-check-label" for="flexCheckDefault">
                           Paid

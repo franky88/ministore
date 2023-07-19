@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header">
+                <strong>{{title|title}}</strong>
+            </div>
+            <div class="card-body">
+                <h3>{{ customer.name|title }}</h3>
+                <strong>Unpaid balance: PHP {% if total_unpaid_orders %}{{ total_unpaid_orders }}{% else %}0.0{% endif %}</strong>
+                <div class="card border-1 mt-3">
+                    <div class="card-header">
+                        <strong>Order details</strong>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Particulars</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in unpaid_orders %}
+                                <tr>
+                                    <td>{{ item.product.name }}</td>
+                                    <td>{{ item.price }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>{{ item.get_cost }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <h3>Balance: PHP {% if total_unpaid_orders %}{{ total_unpaid_orders }}{% else %}0.0{% endif %}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header">
+                <strong>{{title|title}}</strong>
+                <a href="" class="btn btn-outline-primary btn-sm border-0 shadow-sm float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">Add customer</a>
+            </div>
+            <div class="card-body">
+                <div class="row row-cols-1 row-cols-md-4 g-4">
+                    {% for customer in customers %}
+                    <div class="col">
+                      <div class="card">
+                        <div class="card-body">
+                          <h5 class="card-title">{{ customer.name|title }}</h5>
+                        </div>
+                        <div class="card-footer pt-1 pb-1">
+                            <div>
+                                <a href="" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-trash-can"></i></a>
+                                <a href="{% url 'store:customer_details' customer.pk %}" class="btn btn-outline-info btn-sm border-0 shadow-sm">View</a>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add customer</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{% url 'store:add_customer' %}" method="POST">
+        {% csrf_token %}
+        <div class="modal-body">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" name="name" id="floatingInput" placeholder="Name">
+                <label for="floatingInput">Name</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" class="form-control" name="contact" id="floatingContact" placeholder="Contact">
+                <label for="floatingContact">Contact</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary btn-sm border-0 shadow-sm" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-outline-primary btn-sm border-0 shadow-sm">Add customer</button>
+        </div>
+        </form>
+      </div>
+    </div>
+</div>
+{% endblock %}

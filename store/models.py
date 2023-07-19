@@ -51,7 +51,6 @@ class OrderTransaction(models.Model):
     price = models.FloatField()
     quantity = models.PositiveIntegerField()
     total_amount = models.FloatField()
-    money_tender = models.FloatField()
     is_paid = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -64,6 +63,14 @@ class OrderTransaction(models.Model):
     def change(self):
         change = self.total_amount - self.money_tender
         return change
+    
+    @property
+    def balance(self):
+        if not self.is_paid:
+            balance = self.get_cost
+        else:
+            balance = 0.0
+        return balance
 
     def __str__(self):
         return self.customer

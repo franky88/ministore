@@ -8,24 +8,35 @@
                 <strong>Orders</strong>
             </div>
             <div class="card-body">
-                <table class="table">
+                <table class="table table-sm">
                     <thead>
                         <tr>
-                            <th>Order ID</th>
                             <th>Particulars</th>
                             <th>Order by</th>
                             <th>Price</th>
                             <th>Quantity</th>
+                            <th>Total cost</th>
+
                         </tr>
                     </thead>
                     <tbody>
                         {% for order in orders %}
                         <tr>
-                            <td>{{ order.order_id }}</td>
                             <td>{{order.product.name|title}}</td>
                             <td>{{order.customer.name|title}}</td>
-                            <td>{{order.price}}</td>
+                            <td>PHP {{order.price}}</td>
                             <td>{{order.quantity}}</td>
+                            <td>
+                                PHP {{ order.get_cost }} <br>
+                                <small class="text-muted">
+                                    {% if not order.is_paid %}
+                                    Unpaid
+                                    {% else %}
+                                    Paid
+                                    {% endif %}
+                                    | Balance: {{ order.balance }}
+                                </small>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>

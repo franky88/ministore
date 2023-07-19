@@ -6,14 +6,13 @@
     <div class="col-sm-3">
         <div class="card border-0 shadow-sm mt-3">
             <div class="card-header">
-                <strong>Add product</strong>
+                <strong>Product Categories</strong>
+                <a href="" class="btn btn-outline-info btn-sm float-end border-0 shadow-sm" data-bs-toggle="modal" data-bs-target="#addCategory"><i class="fa-solid fa-plus"></i></a>
             </div>
             <div class="card-body">
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    {{form.as_p}}
-                    <input type="submit" value="add" class="btn btn-outline-primary btn-sm">
-                </form>
+                {% for cat in categories %}
+                  {{cat}} <br>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -21,6 +20,7 @@
         <div class="card border-0 shadow-sm mt-3">
             <div class="card-header">
                 <strong>Products</strong>
+                <a href="" class="btn btn-outline-info btn-sm float-end border-0 shadow-sm" data-bs-toggle="modal" data-bs-target="#addProduct">Add product</a>
             </div>
             <div class="card-body">
                 <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -69,11 +69,51 @@
                     {% endfor %}
                 </div>
             </div>
-            
         </div>
-        
     </div>
 </div>
 
+  
+  <!-- Modal -->
+<div class="modal fade" id="addProduct" tabindex="-1" aria-labelledby="addProductLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="addProductLabel">Add product</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="" method="POST">
+        {% csrf_token %}
+        <div class="modal-body">
+            {{form.as_p}}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary border-0 shadow-sm" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-outline-primary border-0 shadow-sm">Add product</button>
+        </div>
+        </form>
+      </div>
+    </div>
+</div>
 
+<div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="addCategoryLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="addCategoryLabel">Add category</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{% url 'store:add_category' %}" method="POST">
+        {% csrf_token %}
+        <div class="modal-body">
+            <input type="text" class="form-control" name="categoryName" placeholder="Category name">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary border-0 shadow-sm" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-outline-primary border-0 shadow-sm">Add category</button>
+        </div>
+        </form>
+      </div>
+    </div>
+</div>
 {% endblock %}
