@@ -11,11 +11,13 @@
             <div class="card-body">
                 <h3>{{ customer.name|title }}</h3>
                 <strong>Unpaid balance: PHP {% if total_unpaid_orders %}{{ total_unpaid_orders }}{% else %}0.0{% endif %}</strong>
+                {% if unpaid_orders %}
                 <div class="card border-1 mt-3">
                     <div class="card-header">
                         <strong>Order details</strong>
                     </div>
                     <div class="card-body">
+                        
                         <table class="table">
                             <thead>
                                 <tr>
@@ -36,13 +38,38 @@
                                 {% endfor %}
                             </tbody>
                         </table>
+                        
                     </div>
                     <div class="card-footer">
+                        <a class="btn btn-outline-primary border-0 shadow-sm float-end" data-bs-toggle="modal" data-bs-target="#payBalance"><i class="fa-regular fa-money-bill-1"></i> Pay</a>
                         <h3>Balance: PHP {% if total_unpaid_orders %}{{ total_unpaid_orders }}{% else %}0.0{% endif %}</h3>
+                        
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
+    </div>
+</div>
+
+<div class="modal fade" id="payBalance" tabindex="-1" aria-labelledby="payBalanceLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="payBalanceLabel">Pay balance</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{% url 'store:pay_balance' customer.pk %}" method="POST">
+        {% csrf_token %}
+        <div class="modal-body">
+            Pay <strong>{{customer.name|title}}</strong> balance of <strong>PHP {{ total_unpaid_orders }}</strong>.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary border-0 shadow-sm" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-outline-primary border-0 shadow-sm">Pay</button>
+        </div>
+        </form>
+      </div>
     </div>
 </div>
 {% endblock %}

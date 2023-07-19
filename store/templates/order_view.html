@@ -23,7 +23,8 @@
                         {% for order in orders %}
                         <tr>
                             <td>{{order.product.name|title}}</td>
-                            <td>{{order.customer.name|title}}</td>
+                            <td>
+                                <a href="{% url 'store:customer_details' order.customer.pk %}">{{order.customer.name|title}}</a></td>
                             <td>PHP {{order.price}}</td>
                             <td>{{order.quantity}}</td>
                             <td>

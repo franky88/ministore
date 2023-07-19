@@ -66,7 +66,6 @@ def order_transaction(request):
                 product = item['product'],
                 price = item['price'],
                 quantity = item['quantity'],
-                money_tender = money,
                 total_amount = cart.get_total_price(),
                 is_paid = paid
             )
