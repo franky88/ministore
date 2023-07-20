@@ -74,7 +74,20 @@ class OrderTransaction(models.Model):
 
     def __str__(self):
         return self.customer
-    
+
+
+class ItemRequest(models.Model):
+    request_by = models.CharField(max_length=120)
+    item_name = models.CharField(max_length=120)
+    message = models.CharField(max_length=120, blank=True, null=True)
+    is_noted = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created']
+
+    def __str__(self):
+        return self.request_by
 
 @receiver(post_save, sender=OrderTransaction)
 def order_pro_save(sender, instance, created, *args, **kwargs):

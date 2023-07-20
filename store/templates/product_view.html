@@ -15,6 +15,39 @@
                 {% endfor %}
             </div>
         </div>
+        <div class="card border-0 shadow-sm mt-3">
+          <div class="card-header">
+              <strong>Product request</strong>
+              <a class="btn btn-outline-info btn-sm border-0 shadow-sm float-end" data-bs-toggle="modal" data-bs-target="#requestItem">Request</a>
+          </div>
+          <div class="card-body">
+            {% for req in all_requests %}
+              <div class="card shadow-sm border-0 mb-2">
+                <div class="card-body">
+                  {% if req %}
+                  <a href="{% url 'store:delete_request' req.pk %}" class="btn btn-outline-danger btn-sm float-end border-0">X</a>
+                  <span>{{req.request_by|title}} requested <strong>{{ req.item_name|title }}</strong>
+                    <br>
+                    <small class="text-muted">Note: {{req.message}}</small>
+                  </span>
+                  {% else %}
+                  No request found
+                  {% endif %}
+                </div>
+                <div class="card-footer pt-1">
+                  <small class="text-muted">Status: {% if req.is_noted %}Noted{% else %}Requested{% endif %}</small>
+                  {% if not req.is_noted %}
+                  <form action="{% url 'store:request_status_update' req.pk %}" class="float-end" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-outline-info btn-sm float-end border-0" value="Noted">
+                  </form>
+                  {% else %}
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+      </div>
     </div>
     <div class="col-sm-9">
         <div class="card border-0 shadow-sm mt-3">
@@ -55,12 +88,15 @@
                         <div class="card-footer pt-1 pb-1">
                             {% if product.quantity %}
                             <a href="{% url 'store:delete_product' product.pk %}" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-trash-can"></i></a>
-                            <a href="{% url 'store:delete_product' product.pk %}" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-pen-to-square"></i></a>
                             <a href="{% url 'store:add_order' product.pk %}" class="btn btn-outline-info btn-sm float-end border-0 shadow-sm">Add to <i class="fa-solid fa-cart-plus"></i></a>
                             {% else %}
                             <div>
                                 <a href="{% url 'store:delete_product' product.pk %}" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-trash-can"></i></a>
-                                <a href="{% url 'store:add_order' product.pk %}" class="btn btn-outline-info btn-sm border-0 shadow-sm">Request</a>
+                                <form action="{% url 'store:request_product_restock' product.pk%}" class="float-end" method="POST">
+                                  {% csrf_token %}
+                                  <input type="submit" class="btn btn-outline-info btn-sm border-0 shadow-sm" value="Request stock">
+                                </form>
                             </div>
                             {% endif %}
                         </div>
@@ -116,4 +152,28 @@
       </div>
     </div>
 </div>
+
+<div class="modal fade" id="requestItem" tabindex="-1" aria-labelledby="requestItemLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="requestItemLabel">Request product form</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{% url 'store:request_item' %}" method="POST">
+      {% csrf_token %}
+      <div class="modal-body">
+        <input class="form-control" type="text" placeholder="Request by" name="requester" required>
+        <input class="form-control mt-2" type="text" placeholder="Product name" name="itemName" required>
+        <input class="form-control mt-2" type="text" placeholder="Notes" name="message">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary border-0 shadow-sm" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-outline-primary border-0 shadow-sm">Request</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 {% endblock %}

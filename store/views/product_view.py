@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from store.models import Product, Category
+from store.models import Product, Category, ItemRequest
 from store.forms.product_form import ProductForm
 from store.cartitem import Cart
 from django.views.decorators.http import require_POST
@@ -10,6 +10,7 @@ def add_product(request):
     form = ProductForm(request.POST or None)
     products = Product.objects.all()
     categories = Category.objects.all()
+    all_requests = ItemRequest.objects.all()
     # total_product_category = categories.aggregate(total_count=Count('product__id'))
     
     cart = Cart(request)
@@ -27,7 +28,8 @@ def add_product(request):
         "form": form,
         "products": products,
         "cart_items": cart_items,
-        "categories": categories
+        "categories": categories,
+        "all_requests": all_requests
     }
     return render(request, 'product_view.html', context)
 

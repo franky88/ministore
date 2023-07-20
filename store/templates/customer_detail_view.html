@@ -12,13 +12,13 @@
                 <h3>{{ customer.name|title }}</h3>
                 <strong>Unpaid balance: PHP {% if total_unpaid_orders %}{{ total_unpaid_orders }}{% else %}0.0{% endif %}</strong>
                 {% if unpaid_orders %}
-                <div class="card border-1 mt-3">
+                <div class="card border-0 mt-3">
                     <div class="card-header">
                         <strong>Order details</strong>
                     </div>
                     <div class="card-body">
                         
-                        <table class="table">
+                        <table class="table table-sm" id="myTable">
                             <thead>
                                 <tr>
                                     <th>Particulars</th>
