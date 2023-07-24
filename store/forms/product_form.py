@@ -6,13 +6,13 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = [
-            'bar_code', 'name', 'cost', 'price', 'quantity', 'category',
+            'name', 'cost', 'price', 'quantity', 'category',
         ]
         widgets = {
-            'bar_code': forms.TextInput(attrs={'class': 'form-control'}),
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'cost': forms.NumberInput(attrs={'class': 'form-control'}),
-            'price': forms.NumberInput(attrs={'class': 'form-control'}),
-            'quantity': forms.NumberInput(attrs={'class': 'form-control'}),
-            'category': forms.Select(attrs={'class': 'form-control'}),
+            # 'bar_code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Bar code', 'aria-label': 'bar code', 'aria-describedby': 'button-addon2'}),
+            'name': forms.TextInput(attrs={'class': 'form-control mb-2', 'placeholder': 'Name'}),
+            'cost': forms.NumberInput(attrs={'class': 'form-control mb-2', 'placeholder': 'Cost'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control mb-2', 'placeholder': 'Price'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control mb-2', 'placeholder': 'Quantity'}),
+            'category': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Category'}),
         }
