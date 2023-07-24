@@ -24,6 +24,6 @@ urlpatterns = [
     path('products/request/item/update/<pk>', request_status_update, name='request_status_update'),
     path('customers', customer_view, name='customer_view'),
     path('customers/add', add_customer_view, name='add_customer'),
-    path('customers/details/<pk>', customer_detail_view, name='customer_details'),
+    path('customers/details/<customer_id>', customer_detail_view, name='customer_details'),
     path('process-order', order_transaction, name='process_order'),
 ]

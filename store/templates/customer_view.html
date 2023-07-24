@@ -3,6 +3,17 @@
 {% block content %}
 
 <div class="row">
+  <div class="col-sm-12 mt-3">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'store:customer_view' %}">Customers</a></li>
+        <!-- <li class="breadcrumb-item active" aria-current="page">{{title|title}}</li> -->
+      </ol>
+    </nav>
+  </div>
+</div>
+
+<div class="row">
     <div class="col-sm-12">
         <div class="card border-0 shadow-sm mt-3">
             <div class="card-header">
@@ -20,7 +31,7 @@
                         <div class="card-footer pt-1 pb-1">
                             <div>
                               <!-- <a href="" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-trash-can"></i></a> -->
-                              <a href="{% url 'store:customer_details' customer.pk %}" class="btn btn-outline-info btn-sm border-0 shadow-sm">View</a>
+                              <a href="{% url 'store:customer_details' customer.customer_id %}" class="btn btn-outline-info btn-sm border-0 shadow-sm">View</a>
                             </div>
                         </div>
                       </div>

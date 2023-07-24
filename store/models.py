@@ -38,6 +38,7 @@ class Product(TimeStampedModel):
     
 
 class Customer(models.Model):
+    customer_id = models.CharField(max_length=12, unique=True, blank=True, null=True)
     name = models.CharField(max_length=200, unique=True)
     contact = models.CharField(max_length=20, blank=True, null=True)
 
@@ -95,3 +96,9 @@ def order_pro_save(sender, instance, created, *args, **kwargs):
         uuid_code = str(uuid.uuid4()).replace("-", "").upper()[:8]
         instance.order_id = uuid_code
         instance.save()
+
+@receiver(pre_save, sender=Customer)
+def customer_id_pre_save(sender, instance, *args, **kwargs):
+    if instance.customer_id == None:
+        uuid_code = str(uuid.uuid4()).replace("-", "").upper()[:12]
+        instance.customer_id = uuid_code

@@ -3,15 +3,15 @@
 {% block content %}
 
 <div class="row">
-    <div class="col-sm-12 mt-3">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item" aria-current="page"><a href="{% url 'store:product_view' %}">Products</a></li>
-          <li class="breadcrumb-item active" aria-current="page">{{title|title}}</li>
-        </ol>
-      </nav>
-    </div>
+  <div class="col-sm-12 mt-3">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item" aria-current="page"><a href="{% url 'store:product_view' %}">Products</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{title|title}}</li>
+      </ol>
+    </nav>
   </div>
+</div>
   
   <div class="row">
       <div class="col-sm-6">
@@ -20,10 +20,11 @@
                     <strong>Products</strong>
                     <!-- <a href="" class="btn btn-outline-primary btn-sm float-end border-0 shadow-sm" data-bs-toggle="modal" data-bs-target="#addProduct">Add product</a> -->
                 </div>
-                <form action="">
+                <form method="POST">
+                  {% csrf_token %}
                 <div class="card-body">
                     <div class="input-group mb-2">
-                        <input type="text" class="form-control" placeholder="Barcode" aria-label="bar code" aria-describedby="button-addon2" name="barcode">
+                        <input id="barcode" type="text" class="form-control" placeholder="Barcode" aria-label="bar code" aria-describedby="button-addon2" name="barcode" required>
                         <a href="" class="btn btn-outline-secondary btn-sm" id="button-addon2" data-bs-toggle="modal" data-bs-target="#barcodeScanner"><i class="fa-solid fa-barcode"></i> Scan</a>
                     </div>
                     {{form.name}}
@@ -67,7 +68,9 @@
 
 <script>
   function onScanSuccess(decodedText, decodedResult) {
+      // console.log('working')
       console.log(`Code scanned = ${decodedText}`, decodedResult);
+      document.getElementById('barcode').value = `${decodedText}`, decodedResult
   }
   var html5QrcodeScanner = new Html5QrcodeScanner(
       "qr-reader", { fps: 10, qrbox: 250 });

@@ -3,6 +3,17 @@
 {% block content %}
 
 <div class="row">
+    <div class="col-sm-12 mt-3">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item" aria-current="page"><a href="{% url 'store:customer_view' %}">Customers</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{title|title}}</li>
+        </ol>
+      </nav>
+    </div>
+</div>
+
+<div class="row">
     <div class="col-sm-12">
         <div class="card border-0 shadow-sm mt-3">
             <div class="card-header">
@@ -21,6 +32,7 @@
                         <table class="table table-sm" id="myTable">
                             <thead>
                                 <tr>
+                                    <th>Date</th>
                                     <th>Particulars</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
@@ -30,6 +42,7 @@
                             <tbody>
                                 {% for item in unpaid_orders %}
                                 <tr>
+                                    <td>{{ item.created|date }}</td>
                                     <td>{{ item.product.name }}</td>
                                     <td>{{ item.price }}</td>
                                     <td>{{ item.quantity }}</td>

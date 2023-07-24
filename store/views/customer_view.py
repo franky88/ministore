@@ -28,8 +28,8 @@ def customer_view(request):
     }
     return render(request, 'customer_view.html', context)
 
-def customer_detail_view(request, pk):
-    customer = get_object_or_404(Customer, pk=pk)
+def customer_detail_view(request, customer_id):
+    customer = get_object_or_404(Customer, customer_id=customer_id)
     unpaid_orders = OrderTransaction.objects.filter(customer=customer).filter(is_paid=False)
     total_unpaid_orders = unpaid_orders.aggregate(total_unpaid=(Sum(F('price') * F('quantity'))))
     cart = Cart(request)
