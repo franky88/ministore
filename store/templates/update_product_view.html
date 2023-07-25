@@ -19,18 +19,18 @@
         <div class="card-header">
             <strong>Products</strong>
         </div>
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
           {% csrf_token %}
         <div class="card-body">
             <!-- <div class="input-group mb-2">
                 <input id="barcode" type="text" class="form-control" placeholder="Barcode" aria-label="bar code" aria-describedby="button-addon2" name="barcode" required>
                 <a href="" class="btn btn-outline-secondary btn-sm" id="button-addon2" data-bs-toggle="modal" data-bs-target="#barcodeScanner"><i class="fa-solid fa-barcode"></i> Scan</a>
             </div> -->
-            {{form.bar_code}}
+            <!-- {{form.bar_code}} -->
             {{form.name}}
-            {{form.cost}}
-            {{form.price}}
-            {{form.quantity}}
+            <!-- {{form.cost}} -->
+            <!-- {{form.price}} -->
+            <!-- {{form.quantity}} -->
             {{form.category}}
             {{form.image}}
         </div>

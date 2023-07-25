@@ -36,7 +36,7 @@ def product_view(request):
     return render(request, 'product_view.html', context)
 
 def add_product(request):
-    form = ProductForm(request.POST or None)
+    form = ProductForm(request.POST or None, request.FILES or None)
 
     cart = Cart(request)
     cart_items = cart.__len__()
@@ -59,15 +59,16 @@ def add_product(request):
 
 def update_product(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    form = ProductForm(request.POST or None, instance=product)
+    form = ProductForm(request.POST or None, request.FILES or None, instance=product)
 
     cart = Cart(request)
     cart_items = cart.__len__()
 
-    if form.is_valid():
-        obj = form.save(commit=False)
-        obj.save()
-        return redirect('store:product_view')
+    if request.method == "POST":
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+            return redirect('store:product_view')
     
     context = {
         "title": "update product",
