@@ -3,6 +3,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
+from PIL import Image
+from io import BytesIO
 
 # Create your models here.
 class TimeStampedModel(models.Model):
@@ -19,6 +21,10 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+def image_directory_path(instance, filename):
+    print(filename)
+    return 'images_{0}/{1}'.format(instance, filename)
+
 class Product(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     bar_code = models.CharField(max_length=20, unique=True)
@@ -27,6 +33,7 @@ class Product(TimeStampedModel):
     cost = models.FloatField()
     price = models.FloatField()
     quantity = models.IntegerField()
+    image = models.ImageField(upload_to=image_directory_path, blank=True, null=True)
 
     @property
     def total_cost(self):
@@ -41,6 +48,7 @@ class Customer(models.Model):
     customer_id = models.CharField(max_length=12, unique=True, blank=True, null=True)
     name = models.CharField(max_length=200, unique=True)
     contact = models.CharField(max_length=20, blank=True, null=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -102,3 +110,22 @@ def customer_id_pre_save(sender, instance, *args, **kwargs):
     if instance.customer_id == None:
         uuid_code = str(uuid.uuid4()).replace("-", "").upper()[:12]
         instance.customer_id = uuid_code
+
+# def get_center_size(img):
+#     im = Image.open(img)
+#     w, h = im.width, im.height
+#     wh = 200
+#     ew, eh = w-wh, h-wh
+#     left, top = ew/2, eh/2
+#     right, bottom = left + wh, top + wh
+#     im1 = im.crop((left, top, right, bottom))
+#     output = BytesIO()
+#     print(output)
+#     return im1
+
+# @receiver(post_save, sender=Product)
+# def post_save_crop_image(sender, instance, created, *args, **kwargs):
+#     if instance.image:
+#         instance.image = get_center_size(instance.image.path).save('crop.jpg')
+#         print(instance.image.path)
+#         instance.save()

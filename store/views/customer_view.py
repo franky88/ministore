@@ -18,12 +18,14 @@ def add_customer_view(request):
         return redirect('store:pos_view')
 
 def customer_view(request):
+    customers_balance = Customer.objects.filter(ordertransaction__is_paid=False).annotate(total_balance=(Sum(F('ordertransaction__price') * F('ordertransaction__quantity'))))
     customers = Customer.objects.all()
     cart = Cart(request)
     cart_items = cart.__len__()
     context = {
         'title': 'customers',
         'customers': customers,
+        'customers_balance': customers_balance,
         'cart_items': cart_items
     }
     return render(request, 'customer_view.html', context)
@@ -41,4 +43,33 @@ def customer_detail_view(request, customer_id):
         'unpaid_orders': unpaid_orders,
         'total_unpaid_orders': total_unpaid_orders['total_unpaid']
     }
+    return render(request, 'customer_detail_view.html', context)
+
+def update_customer(request, customer_id):
+    customer = get_object_or_404(Customer, customer_id=customer_id)
+
+    cart = Cart(request)
+    cart_items = cart.__len__()
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        contact = request.POST.get('contact')
+        isactive = request.POST.get('isactive')
+        if isactive == None:
+            isactive = False
+        else:
+            isactive = True
+        print("is active",isactive)
+        customer.name = name
+        customer.contact = contact
+        customer.is_active = isactive
+        customer.save()
+        return redirect('store:customer_details', customer.customer_id)
+
+    context = {
+        'title': 'customer details',
+        'customer': customer,
+        'cart_items': cart_items,
+    }
+
     return render(request, 'customer_detail_view.html', context)

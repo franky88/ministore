@@ -14,33 +14,51 @@
 </div>
 
 <div class="row">
-    <div class="col-sm-12">
-        <div class="card border-0 shadow-sm mt-3">
-            <div class="card-header">
-                <strong>{{title|title}}</strong>
-                <a href="" class="btn btn-outline-primary btn-sm border-0 shadow-sm float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">Add customer</a>
-            </div>
-            <div class="card-body">
-                <div class="row row-cols-1 row-cols-md-4 g-4">
-                    {% for customer in customers %}
-                    <div class="col">
-                      <div class="card">
-                        <div class="card-body">
-                          <h5 class="card-title">{{ customer.name|title }}</h5>
-                        </div>
-                        <div class="card-footer pt-1 pb-1">
-                            <div>
-                              <!-- <a href="" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-trash-can"></i></a> -->
-                              <a href="{% url 'store:customer_details' customer.customer_id %}" class="btn btn-outline-info btn-sm border-0 shadow-sm">View</a>
-                            </div>
-                        </div>
+  <div class="col-sm-3">
+    <div class="card border-0 shadow-sm mt-3">
+      <div class="card-header">
+        <strong>Account receivable</strong>
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          {% for customer in customers_balance %}
+          <li class="list-group-item">
+            <h6><a href="{% url 'store:customer_details' customer.customer_id %}">{{customer|title}}</a></h6>
+            <small class="text-muted">Balance: PHP {{ customer.total_balance }}</small>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-9">
+      <div class="card border-0 shadow-sm mt-3">
+          <div class="card-header">
+              <strong>{{title|title}}</strong>
+              <a href="" class="btn btn-outline-primary btn-sm border-0 shadow-sm float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">Add customer</a>
+          </div>
+          <div class="card-body">
+              <div class="row row-cols-1 row-cols-md-4 g-4">
+                  {% for customer in customers %}
+                  <div class="col">
+                    <div class="card">
+                      <div class="card-body">
+                        <h5 class="card-title">{{ customer.name|title }}</h5>
+                        <small>Balance: PHP {{ customer.total_balance }}</small>
+                      </div>
+                      <div class="card-footer pt-1 pb-1">
+                          <div>
+                            <!-- <a href="" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-trash-can"></i></a> -->
+                            <a href="{% url 'store:customer_details' customer.customer_id %}" class="btn btn-outline-info btn-sm border-0 shadow-sm">View</a>
+                          </div>
                       </div>
                     </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </div>
+                  </div>
+                  {% endfor %}
+              </div>
+          </div>
+      </div>
+  </div>
 </div>
 
 

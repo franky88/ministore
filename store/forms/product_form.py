@@ -6,7 +6,7 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = [
-            'name', 'cost', 'price', 'quantity', 'category',
+            'name', 'cost', 'price', 'quantity', 'category', 'image'
         ]
         widgets = {
             # 'bar_code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Bar code', 'aria-label': 'bar code', 'aria-describedby': 'button-addon2'}),
@@ -14,5 +14,6 @@ class ProductForm(forms.ModelForm):
             'cost': forms.NumberInput(attrs={'class': 'form-control mb-2', 'placeholder': 'Cost'}),
             'price': forms.NumberInput(attrs={'class': 'form-control mb-2', 'placeholder': 'Price'}),
             'quantity': forms.NumberInput(attrs={'class': 'form-control mb-2', 'placeholder': 'Quantity'}),
-            'category': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Category'}),
+            'category': forms.Select(attrs={'class': 'form-control mb-2', 'placeholder': 'Category'}),
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
         }

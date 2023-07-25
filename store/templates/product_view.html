@@ -21,9 +21,14 @@
                 <a class="btn btn-outline-primary btn-sm float-end border-0 shadow-sm" data-bs-toggle="modal" data-bs-target="#addCategory"><i class="fa-solid fa-plus"></i></a>
             </div>
             <div class="card-body">
+              <ul class="list-group list-group-flush">
                 {% for cat in categories %}
-                  {{cat}} <br>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  {{cat|title}}
+                  <span class="badge bg-info squared-pill">{{cat.count}}</span>
+                </li>
                 {% endfor %}
+              </ul>
             </div>
         </div>
         <div class="card border-0 shadow-sm mt-3">
@@ -32,31 +37,25 @@
               <a class="btn btn-outline-info btn-sm border-0 shadow-sm float-end" data-bs-toggle="modal" data-bs-target="#requestItem">Request</a>
           </div>
           <div class="card-body">
-            {% for req in all_requests %}
-              <div class="card shadow-sm border-0 mb-2">
-                <div class="card-body">
-                  {% if req %}
+            <div class="list-group list-group-flush">
+              {% for req in all_requests %}
+              <div class="list-group-item list-group-item-action" aria-current="true">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">{{ req.item_name|title }}</h5>
                   <a href="{% url 'store:delete_request' req.pk %}" class="btn btn-outline-danger btn-sm float-end border-0">X</a>
-                  <span>{{req.request_by|title}} requested <strong>{{ req.item_name|title }}</strong>
-                    <br>
-                    <small class="text-muted">Note: {{req.message}}</small>
-                  </span>
-                  {% else %}
-                  No request found
-                  {% endif %}
                 </div>
-                <div class="card-footer pt-1">
-                  <small class="text-muted">Status: {% if req.is_noted %}Noted{% else %}Requested{% endif %}</small>
-                  {% if not req.is_noted %}
-                  <form action="{% url 'store:request_status_update' req.pk %}" class="float-end" method="POST">
-                    {% csrf_token %}
-                    <input type="submit" class="btn btn-outline-info btn-sm float-end border-0" value="Noted">
-                  </form>
-                  {% else %}
-                  {% endif %}
-                </div>
+                <p class="mb-1">{{req.message}} <small><b>by: {{req.request_by|title}}</b></small> </p>
+                <small class="text-muted">Status: {% if req.is_noted %}Noted{% else %}Requested{% endif %}</small>
+                {% if not req.is_noted %}
+                <form action="{% url 'store:request_status_update' req.pk %}" class="float-end" method="POST">
+                  {% csrf_token %}
+                  <input type="submit" class="btn btn-outline-info btn-sm float-end border-0" value="Noted">
+                </form>
+                {% else %}
+                {% endif %}
               </div>
-            {% endfor %}
+              {% endfor %}
+            </div>
           </div>
       </div>
     </div>
@@ -68,15 +67,17 @@
                 <!-- <a href="" class="btn btn-outline-primary btn-sm float-end border-0 shadow-sm" data-bs-toggle="modal" data-bs-target="#addProduct">Add product</a> -->
             </div>
             <div class="card-body">
-                <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="row row-cols-1 row-cols-md-3 d-flex align-content-start flex-wrap g-3">
                     {% for product in products %}
                     <div class="col">
-                      <div class="card">
-                        <!-- <img src="..." class="card-img-top" alt="..."> -->
+                      <div class="card h-80">
+                        {% if product.image %}
+                        <img style="max-width: 100%; height: auto;" src="{{ product.image.url }}" class="card-img-top" alt="...">
+                        {% endif %}
                         <div class="card-body">
                           <h5 class="card-title">{{ product.name|title }}</h5>
                           <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 mb-2">
                                 <div class="card border-primary">
                                     <div class="card-body p-1">
                                         {% if not product.quantity %}
@@ -101,7 +102,7 @@
                         <div class="card-footer pt-1 pb-1">
                             {% if product.quantity %}
                             <a href="{% url 'store:delete_product' product.pk %}" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-trash-can"></i></a>
-                            <a href="" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="{% url 'store:update_product' product.pk %}" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-pen-to-square"></i></a>
                             <a href="{% url 'store:add_order' product.pk %}" class="btn btn-outline-info btn-sm float-end border-0 shadow-sm">Add to <i class="fa-solid fa-cart-plus"></i></a>
                             {% else %}
                             <div>

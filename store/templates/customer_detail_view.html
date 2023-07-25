@@ -18,6 +18,7 @@
         <div class="card border-0 shadow-sm mt-3">
             <div class="card-header">
                 <strong>{{title|title}}</strong>
+                <a href="" class="btn btn-outline-primary btn-sm border-0 shadow-sm float-end" data-bs-toggle="modal" data-bs-target="#updateCustomer">Edit</a>
             </div>
             <div class="card-body">
                 <h3>{{ customer.name|title }}</h3>
@@ -72,7 +73,7 @@
           <h1 class="modal-title fs-5" id="payBalanceLabel">Pay balance</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form action="{% url 'store:pay_balance' customer.pk %}" method="POST">
+        <form action="{% url 'store:pay_balance' customer.customer_id %}" method="POST">
         {% csrf_token %}
         <div class="modal-body">
             Pay <strong>{{customer.name|title}}</strong> balance of <strong>PHP {{ total_unpaid_orders }}</strong>.
@@ -80,6 +81,41 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary border-0 shadow-sm" data-bs-dismiss="modal">Close</button>
           <button type="submit" class="btn btn-outline-primary border-0 shadow-sm">Pay</button>
+        </div>
+        </form>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="updateCustomer" tabindex="-1" aria-labelledby="updateCustomerLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="updateCustomerLabel">Add customer</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="{% url 'store:update_customer' customer.customer_id %}" method="POST">
+        {% csrf_token %}
+        <div class="modal-body">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" name="name" id="floatingInput" placeholder="Name" value="{{customer.name}}">
+                <label for="floatingInput">Name</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" class="form-control" name="contact" id="floatingContact" placeholder="Contact" value="{{customer.contact}}">
+                <label for="floatingContact">Contact</label>
+            </div>
+            <div class="form-check mt-2">
+                <input class="form-check-input" name="isactive" type="checkbox" value="" id="flexCheckChecked" {% if customer.is_active %}checked{% else %}{% endif %}>
+                <label class="form-check-label" for="flexCheckChecked">
+                  Is active
+                </label>
+            </div>
+            <!-- <input type="checkbox" class="form-control" name="contact" placeholder="Contact" value="{{customer.is_active}}"> -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary btn-sm border-0 shadow-sm" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-outline-primary btn-sm border-0 shadow-sm">Update</button>
         </div>
         </form>
       </div>

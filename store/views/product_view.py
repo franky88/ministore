@@ -9,7 +9,7 @@ from django.db.models import Sum, Count, F
 def product_view(request):
     form = ProductForm(request.POST or None)
     products = Product.objects.all()
-    categories = Category.objects.all()
+    categories = Category.objects.annotate(count=Count('product__id'))
     all_requests = ItemRequest.objects.all()
     # total_product_category = categories.aggregate(total_count=Count('product__id'))
     
@@ -56,6 +56,27 @@ def add_product(request):
         "cart_items": cart_items
     }
     return render(request, 'add_product_view.html', context)
+
+def update_product(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    form = ProductForm(request.POST or None, instance=product)
+
+    cart = Cart(request)
+    cart_items = cart.__len__()
+
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.save()
+        return redirect('store:product_view')
+    
+    context = {
+        "title": "update product",
+        "form": form,
+        "cart_items": cart_items,
+        "product": product
+    }
+
+    return render(request, 'update_product_view.html', context)
 
 def delete_product(request, pk):
     instance = get_object_or_404(Product, pk=pk)

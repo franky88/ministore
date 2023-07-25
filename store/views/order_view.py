@@ -21,11 +21,11 @@ def order_view(request):
     return render(request, 'order_view.html', context)
 
 @require_POST
-def pay_balance(request, pk):
-    customer = get_object_or_404(Customer, pk=pk)
+def pay_balance(request, customer_id):
+    customer = get_object_or_404(Customer, customer_id=customer_id)
     unpaid_orders = OrderTransaction.objects.filter(customer=customer).filter(is_paid=False)
     if request.method == "POST":
         for item in unpaid_orders:
             item.is_paid = True
             item.save()
-        return redirect('store:customer_details', customer.pk)
+        return redirect('store:customer_details', customer.customer_id)
