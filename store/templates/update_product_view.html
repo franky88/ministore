@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 
@@ -22,23 +23,24 @@
         <form method="POST" enctype="multipart/form-data">
           {% csrf_token %}
         <div class="card-body">
-            <!-- <div class="input-group mb-2">
-                <input id="barcode" type="text" class="form-control" placeholder="Barcode" aria-label="bar code" aria-describedby="button-addon2" name="barcode" required>
-                <a href="" class="btn btn-outline-secondary btn-sm" id="button-addon2" data-bs-toggle="modal" data-bs-target="#barcodeScanner"><i class="fa-solid fa-barcode"></i> Scan</a>
-            </div> -->
-            <!-- {{form.bar_code}} -->
-            {{form.name}}
-            <!-- {{form.cost}} -->
-            <!-- {{form.price}} -->
-            <!-- {{form.quantity}} -->
-            {{form.category}}
-            {{form.image}}
+            {{form.name|as_crispy_field}}
+            {{form.category|as_crispy_field}}
+            {{form.image|as_crispy_field}}
         </div>
         <div class="card-footer">
             <input type="submit" class="btn btn-outline-primary btn-sm" value="Update Product">
         </div>
         </form>
       </div>
+  </div>
+  <div class="col-sm-2">
+    <div class="card mt-3">
+      <div class="card-body">
+        {% if product.image %}
+        <img style="width: 100%; height: auto;" src="{{ product.image.url }}" alt="">
+        {% endif %}
+      </div>
+    </div>
   </div>
 </div>
 

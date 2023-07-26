@@ -1,7 +1,7 @@
 from django.urls import path
 from .views.pos_view import product_order_view, add_order_view, clear_cart_items, cart_updated, order_transaction
 from .views.product_view import product_view, delete_product, add_product, update_product
-from .views.order_view import order_view, pay_balance
+from .views.order_view import order_view, pay_balance, pay_order, order_details
 from .views.customer_view import add_customer_view, customer_view, customer_detail_view, update_customer
 from .views.category_view import add_category
 from .views.item_request_view import request_item, delete_request, request_product_restock, request_status_update
@@ -13,7 +13,9 @@ urlpatterns = [
     path('sales', order_view, name='order_view'),
     path('add-orders/<pk>', add_order_view, name='add_order'),
     path('orders/clear', clear_cart_items, name='clear_order'),
+    path('orders/details/<order_id>', order_details, name='order_details'),
     path('orders/balance/<customer_id>', pay_balance, name='pay_balance'),
+    path('orders/pay/<order_id>', pay_order, name='pay_order'),
     path('products/', product_view, name='product_view'),
     path('products/add', add_product, name='add_product_view'),
     path('products/categories/add', add_category, name='add_category'),

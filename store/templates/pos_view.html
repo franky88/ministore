@@ -2,6 +2,9 @@
 
 
 {% block content %}
+{% if messages %}
+  {% include 'includes/messages.html' %}
+{% endif %}
 <div class="row">
     <div class="col-sm-6">
         <div class="card border-0 shadow-sm mt-3">

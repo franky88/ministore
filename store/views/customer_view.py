@@ -10,7 +10,7 @@ def add_customer_view(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         contact = request.POST.get('contact')
-        customer = Customer(
+        customer = Customer.objects.create(
             name=name,
             contact=contact
         )
@@ -19,6 +19,7 @@ def add_customer_view(request):
 
 def customer_view(request):
     customers_balance = Customer.objects.filter(ordertransaction__is_paid=False).annotate(total_balance=(Sum(F('ordertransaction__price') * F('ordertransaction__quantity'))))
+    total_balance = customers_balance.aggregate(balance = Sum('total_balance'))
     customers = Customer.objects.all()
     cart = Cart(request)
     cart_items = cart.__len__()
@@ -26,7 +27,8 @@ def customer_view(request):
         'title': 'customers',
         'customers': customers,
         'customers_balance': customers_balance,
-        'cart_items': cart_items
+        'cart_items': cart_items,
+        'total_balance': total_balance
     }
     return render(request, 'customer_view.html', context)
 

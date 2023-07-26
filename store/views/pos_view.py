@@ -3,6 +3,7 @@ from store.cartitem import Cart
 from store.models import Product, Customer, OrderTransaction
 from django.views.decorators.http import require_POST
 from store.forms.customer_form import CustomerForm
+from django.contrib import messages
 
 
 # Create your views here.
@@ -25,8 +26,8 @@ def product_order_view(request):
 def add_order_view(request, pk):
     cart = Cart(request)
     product = get_object_or_404(Product, pk=pk)
-    if product.quantity > 1:
-        pass
+    # if product.quantity < 1:
+    #     pass
     cart.add(product=product, quantity=1, update_quantity=False)
     return redirect('store:product_view')
 
@@ -48,20 +49,16 @@ def cart_updated(request, bar_code):
 @require_POST
 def order_transaction(request):
     cart = Cart(request)
-    print(cart.get_total_price())
     if request.method == 'POST':
         customer = request.POST.get('customer_01')
         cus = get_object_or_404(Customer, name=customer)
-        money = request.POST.get('moneytender')
         is_paid = request.POST.get('is_paid')
-        # paid = False
         if is_paid == None:
             paid = False
         else:
             paid = True
-        print(is_paid)
         for item in cart:
-            order = OrderTransaction(
+            order = OrderTransaction.objects.create(
                 customer = cus,
                 product = item['product'],
                 price = item['price'],
@@ -72,5 +69,7 @@ def order_transaction(request):
             order.product.quantity -= order.quantity
             order.product.save()
             order.save()
+            url = "orders/details/%s"%(order.order_id)
+            messages.add_message(request, messages.SUCCESS, 'Your order successfully posted. <a href="%s">View order</a>'%(url))
         cart.clear()
         return redirect('store:pos_view')

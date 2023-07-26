@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+{% if messages %}
+  {% include 'includes/messages.html' %}
+{% endif %}
 <div class="row">
     <div class="col-sm-12 mt-3">
       <nav aria-label="breadcrumb">
@@ -33,21 +35,39 @@
                         <table class="table table-sm" id="myTable">
                             <thead>
                                 <tr>
+                                    <th>Order number</th>
                                     <th>Date</th>
                                     <th>Particulars</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
                                     <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Pay</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for item in unpaid_orders %}
                                 <tr>
+                                    <td>{{ item.order_id }}</td>
                                     <td>{{ item.created|date }}</td>
                                     <td>{{ item.product.name }}</td>
                                     <td>{{ item.price }}</td>
                                     <td>{{ item.quantity }}</td>
                                     <td>{{ item.get_cost }}</td>
+                                    <td>
+                                      {% if item.is_paid %}
+                                      Paid
+                                      {% else %}
+                                      Unpaid
+                                      {% endif %}
+
+                                    </td>
+                                    <td>
+                                      <form action="{% url 'store:pay_order' item.order_id %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="submit" value="Pay">
+                                      </form>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -55,7 +75,7 @@
                         
                     </div>
                     <div class="card-footer">
-                        <a class="btn btn-outline-primary border-0 shadow-sm float-end" data-bs-toggle="modal" data-bs-target="#payBalance"><i class="fa-regular fa-money-bill-1"></i> Pay</a>
+                        <a class="btn btn-outline-primary border-0 shadow-sm float-end" data-bs-toggle="modal" data-bs-target="#payBalance"><i class="fa-regular fa-money-bill-1"></i> Pay all</a>
                         <h3>Balance: PHP {% if total_unpaid_orders %}{{ total_unpaid_orders }}{% else %}0.0{% endif %}</h3>
                         
                     </div>
