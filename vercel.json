@@ -10,7 +10,7 @@
             "src": "buils_files.sh",
             "use": "@vercel/static-build",
             "config": {
-                "distDir": "static",
+                "distDir": "static"
             }
         }
     ],
@@ -18,7 +18,7 @@
         {
             "src": "/static/(.*)",
             "dest": "/static/$1"
-        }
+        },
         {
             "src": "/(.*)",
             "dest": "minipos/wsgi.py"
