@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from store.cartitem import Cart
-from store.models import Product, Customer, OrderTransaction
+from store.models import Product, Customer, OrderTransaction, CustomerOrder
 from django.views.decorators.http import require_POST
 from store.forms.customer_form import CustomerForm
 from django.contrib import messages
@@ -58,7 +58,7 @@ def order_transaction(request):
         else:
             paid = True
         for item in cart:
-            order = OrderTransaction.objects.create(
+            order = OrderTransaction(
                 customer = cus,
                 product = item['product'],
                 price = item['price'],
@@ -66,10 +66,10 @@ def order_transaction(request):
                 total_amount = cart.get_total_price(),
                 is_paid = paid
             )
+            
             order.product.quantity -= order.quantity
             order.product.save()
             order.save()
-            url = "orders/details/%s"%(order.order_id)
-            messages.add_message(request, messages.SUCCESS, 'Your order successfully posted. <a href="%s">View order</a>'%(url))
+        messages.add_message(request, messages.SUCCESS, 'Your order successfully posted.')
         cart.clear()
         return redirect('store:pos_view')

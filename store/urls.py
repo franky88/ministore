@@ -1,7 +1,7 @@
 from django.urls import path
 from .views.pos_view import product_order_view, add_order_view, clear_cart_items, cart_updated, order_transaction
 from .views.product_view import product_view, delete_product, add_product, update_product
-from .views.order_view import order_view, pay_balance, pay_order, order_details
+from .views.order_view import sales_view, pay_balance, pay_order, sales_details, order_view, accept_order
 from .views.customer_view import add_customer_view, customer_view, customer_detail_view, update_customer
 from .views.category_view import add_category
 from .views.item_request_view import request_item, delete_request, request_product_restock, request_status_update
@@ -10,10 +10,12 @@ app_name = 'store'
 urlpatterns = [
     path('', product_order_view, name='pos_view'),
     path('update-quantity/<bar_code>', cart_updated, name='update_quantity'),
-    path('sales', order_view, name='order_view'),
+    path('sales', sales_view, name='sales_view'),
+    path('orders', order_view, name='order_view'),
+    path('orders/accept/<order_id>', accept_order, name='accept_order'),
     path('add-orders/<pk>', add_order_view, name='add_order'),
     path('orders/clear', clear_cart_items, name='clear_order'),
-    path('orders/details/<order_id>', order_details, name='order_details'),
+    path('orders/details/<order_id>', sales_details, name='sales_details'),
     path('orders/balance/<customer_id>', pay_balance, name='pay_balance'),
     path('orders/pay/<order_id>', pay_order, name='pay_order'),
     path('products/', product_view, name='product_view'),

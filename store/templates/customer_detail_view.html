@@ -35,39 +35,39 @@
                         <table class="table table-sm" id="myTable">
                             <thead>
                                 <tr>
-                                    <th>Order number</th>
-                                    <th>Date</th>
-                                    <th>Particulars</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>Total</th>
-                                    <th>Status</th>
-                                    <th>Pay</th>
+                                  <th>Order number</th>
+                                  <th>Date</th>
+                                  <th>Particulars</th>
+                                  <th>Price</th>
+                                  <th>Quantity</th>
+                                  <th>Total</th>
+                                  <th>Status</th>
+                                  <th>Pay</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for item in unpaid_orders %}
                                 <tr>
-                                    <td>{{ item.order_id }}</td>
-                                    <td>{{ item.created|date }}</td>
-                                    <td>{{ item.product.name }}</td>
-                                    <td>{{ item.price }}</td>
-                                    <td>{{ item.quantity }}</td>
-                                    <td>{{ item.get_cost }}</td>
-                                    <td>
-                                      {% if item.is_paid %}
-                                      Paid
-                                      {% else %}
-                                      Unpaid
-                                      {% endif %}
+                                  <td>{{ item.order_id }}</td>
+                                  <td>{{ item.created|date }}</td>
+                                  <td>{{ item.product.name }}</td>
+                                  <td>{{ item.price }}</td>
+                                  <td>{{ item.quantity }}</td>
+                                  <td>{{ item.get_cost }}</td>
+                                  <td>
+                                    {% if item.is_paid %}
+                                    Paid
+                                    {% else %}
+                                    Unpaid
+                                    {% endif %}
 
-                                    </td>
-                                    <td>
-                                      <form action="{% url 'store:pay_order' item.order_id %}" method="POST">
-                                        {% csrf_token %}
-                                        <input type="submit" value="Pay">
-                                      </form>
-                                    </td>
+                                  </td>
+                                  <td>
+                                    <form action="{% url 'store:pay_order' item.order_id %}" method="POST">
+                                      {% csrf_token %}
+                                      <input type="submit" value="Pay">
+                                    </form>
+                                  </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

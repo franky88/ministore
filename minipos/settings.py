@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'store',
     'crispy_forms',
     'crispy_bootstrap5',
+    'django_tables2',
+    'django_filters',
+    'django_htmx',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_htmx.middleware.HtmxMiddleware',
 ]
 
 ROOT_URLCONF = 'minipos.urls'
@@ -118,8 +122,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+# STATICFILES_DIRS = [BASE_DIR / "static"]
+
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
+
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

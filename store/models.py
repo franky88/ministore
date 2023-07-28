@@ -1,10 +1,12 @@
 import uuid
+import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from PIL import Image
 from io import BytesIO
+from django.utils import timezone
 
 # Create your models here.
 class TimeStampedModel(models.Model):
@@ -34,6 +36,7 @@ class Product(TimeStampedModel):
     price = models.FloatField()
     quantity = models.IntegerField()
     image = models.ImageField(upload_to=image_directory_path, blank=True, null=True)
+    on_display = models.BooleanField(default=True, verbose_name="this product is available?")
 
     @property
     def total_cost(self):
@@ -65,6 +68,7 @@ class OrderTransaction(models.Model):
     quantity = models.PositiveIntegerField()
     total_amount = models.FloatField()
     is_paid = models.BooleanField(default=False)
+    is_accepted = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
     @property
@@ -84,9 +88,23 @@ class OrderTransaction(models.Model):
         else:
             balance = 0.0
         return balance
+    
+    @property
+    def is_recent_orders(self):
+        now = timezone.now()
+        return now - datetime.timedelta(days=1) <= self.created <= now
 
     def __str__(self):
-        return self.customer
+        return self.customer.name
+
+class CustomerOrder(TimeStampedModel):
+    order_id = models.CharField(max_length=100, unique=True)
+    orders = models.ForeignKey(OrderTransaction, on_delete=models.CASCADE)
+    class Meta:
+        ordering = ['-created']
+    
+    def __str__(self):
+        return self.order_id
 
 
 class ItemRequest(models.Model):
@@ -114,6 +132,12 @@ def customer_id_pre_save(sender, instance, *args, **kwargs):
     if instance.customer_id == None:
         uuid_code = str(uuid.uuid4()).replace("-", "").upper()[:12]
         instance.customer_id = uuid_code
+
+@receiver(pre_save, sender=CustomerOrder)
+def customer_order_id_pre_save(sender, instance, *args, **kwargs):
+    if instance.order_id == None:
+        uuid_code = str(uuid.uuid4()).replace("-", "").upper()[:12]
+        instance.order_id = uuid_code
 
 # def get_center_size(img):
 #     im = Image.open(img)

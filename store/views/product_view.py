@@ -86,6 +86,7 @@ def add_product(request):
         "form": form,
         "cart_items": cart_items
     }
+    print(dir(Product.objects))
     return render(request, 'add_product_view.html', context)
 
 def update_product(request, pk):

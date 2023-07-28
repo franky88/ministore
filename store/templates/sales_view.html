@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-3">
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header">
+                <strong>Sales</strong>
+            </div>
+            <div class="card-body">
+                <h2>PHP {{ paid_orders }}</h2>
+                <small>Unpaid orders: <b>PHP {{ unpaid_orders }}</b></small>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-9">
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header">
+                <strong>Orders</strong>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm" id="myTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Particulars</th>
+                            <th>Order by</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total cost</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>{{ order.created|date }}</td>
+                            <td>{{order.product.name|title}}</td>
+                            <td>
+                                <a href="{% url 'store:customer_details' order.customer.pk %}">{{order.customer.name|title}}</a></td>
+                            <td>PHP {{order.price}}</td>
+                            <td>{{order.quantity}}</td>
+                            <td>
+                                PHP {{ order.get_cost }} <br>
+                                <small class="text-muted">
+                                    {% if not order.is_paid %}
+                                    Unpaid
+                                    {% else %}
+                                    Paid
+                                    {% endif %}
+                                    | Balance: {{ order.balance }}
+                                </small>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

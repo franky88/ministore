@@ -9,9 +9,13 @@
           <li class="nav-item">
             <a class="nav-link" aria-current="page" href="{% url 'store:product_view' %}">Products</a>
           </li>
+          
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="{% url 'store:order_view' %}">Orders</a>
+          </li>
           {% if request.user.is_authenticated %}
           <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="{% url 'store:order_view' %}">Sales</a>
+            <a class="nav-link" aria-current="page" href="{% url 'store:sales_view' %}">Sales</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" aria-current="page" href="{% url 'store:customer_view' %}">Customers</a>
