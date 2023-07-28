@@ -1,3 +1,4 @@
+import sqlite3
 from django.shortcuts import render, get_object_or_404, redirect
 from store.models import Product, Category, ItemRequest
 from store.forms.product_form import AddProductForm, UpdateProductForm
@@ -10,6 +11,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # @require_POST
 def product_view(request):
+    print("sqliteversion", sqlite3.sqlite_version)
     form = AddProductForm(request.POST or None)
     products = Product.objects.all()
     categories = Category.objects.annotate(count=Count('product__id'))
