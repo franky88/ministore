@@ -7,9 +7,11 @@ from django.views.decorators.http import require_POST
 from django.db.models import Sum, Count, F
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from django.contrib.auth.decorators import login_required, permission_required
 
 # @require_POST
+
+@login_required
 def product_view(request):
     print("sqliteversion", sqlite3.sqlite_version)
     form = AddProductForm(request.POST or None)
@@ -68,6 +70,8 @@ def product_view(request):
     }
     return render(request, 'product_view.html', context)
 
+@login_required
+@permission_required("store.add_product", raise_exception=True)
 def add_product(request):
     form = AddProductForm(request.POST or None, request.FILES or None)
 
@@ -91,6 +95,8 @@ def add_product(request):
     print(dir(Product.objects))
     return render(request, 'add_product_view.html', context)
 
+@login_required
+@permission_required("store.update_product", raise_exception=True)
 def update_product(request, pk):
     product = get_object_or_404(Product, pk=pk)
     form = UpdateProductForm(request.POST or None, request.FILES or None, instance=product)
@@ -113,6 +119,8 @@ def update_product(request, pk):
 
     return render(request, 'update_product_view.html', context)
 
+@login_required
+@permission_required("store.delete_product", raise_exception=True)
 def delete_product(request, pk):
     instance = get_object_or_404(Product, pk=pk)
     instance.delete()

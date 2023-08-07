@@ -23,7 +23,7 @@
                 <a href="" class="btn btn-outline-primary btn-sm border-0 shadow-sm float-end" data-bs-toggle="modal" data-bs-target="#updateCustomer">Edit</a>
             </div>
             <div class="card-body">
-                <h3>{{ customer.name|title }}</h3>
+                <h3>{{ customer.username|title }}</h3>
                 <strong>Unpaid balance: PHP {% if total_unpaid_orders %}{{ total_unpaid_orders }}{% else %}0.0{% endif %}</strong>
                 {% if unpaid_orders %}
                 <div class="card border-0 mt-3">
@@ -93,7 +93,7 @@
           <h1 class="modal-title fs-5" id="payBalanceLabel">Pay balance</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form action="{% url 'store:pay_balance' customer.customer_id %}" method="POST">
+        <form action="{% url 'store:pay_balance' customer.pk %}" method="POST">
         {% csrf_token %}
         <div class="modal-body">
             Pay <strong>{{customer.name|title}}</strong> balance of <strong>PHP {{ total_unpaid_orders }}</strong>.
@@ -114,7 +114,7 @@
           <h1 class="modal-title fs-5" id="updateCustomerLabel">Add customer</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form action="{% url 'store:update_customer' customer.customer_id %}" method="POST">
+        <form action="{% url 'store:update_customer' customer.pk %}" method="POST">
         {% csrf_token %}
         <div class="modal-body">
             <div class="form-floating mb-3">

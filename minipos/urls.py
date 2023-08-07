@@ -19,10 +19,15 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
+handler400 = 'store.views.error_handler_view.handler400'
+handler403 = 'store.views.error_handler_view.handler403'
+handler404 = 'store.views.error_handler_view.handler404'
+handler500 = 'store.views.error_handler_view.handler500'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('store.urls'))
+    path('', include('store.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
 
 if settings.DEBUG:

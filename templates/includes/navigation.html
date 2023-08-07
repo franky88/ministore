@@ -1,3 +1,5 @@
+{% load crispy_forms_tags %}
+
 <nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: #222;">
     <div class="container">
       <a class="navbar-brand" href="{% url 'store:product_view' %}">MINI STORE</a>
@@ -13,10 +15,12 @@
           <li class="nav-item">
             <a class="nav-link" aria-current="page" href="{% url 'store:order_view' %}">Orders</a>
           </li>
-          {% if request.user.is_authenticated %}
+          {% if perms.auth.view_ordertransaction %}
           <li class="nav-item">
             <a class="nav-link" aria-current="page" href="{% url 'store:sales_view' %}">Sales</a>
           </li>
+          {% endif %}
+          {% if perms.auth.view_user %}
           <li class="nav-item">
             <a class="nav-link" aria-current="page" href="{% url 'store:customer_view' %}">Customers</a>
           </li>
@@ -25,6 +29,16 @@
             <a class="nav-link" href="{% url 'store:pos_view' %}">Cart {% if cart_items > 1 %}items <span class="badge text-bg-success"> {{ cart_items }}{% else %}item <span class="badge text-bg-secondary"> {{ cart_items }}{% endif %}</span></a>
           </li>
         </ul>
+        <ul class="navbar-nav float-end mb-2 mb-lg-0">
+          {% if request.user.is_authenticated %}
+          <li class="nav-item">
+            <span class="nav-link" aria-current="page">Hello {{request.user.username|title}}!</span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="#" data-bs-toggle="modal" data-bs-target="#logoutUser">Logout</a>
+          </li>
+          {% endif %}
+        </ul>
         <!-- <form class="d-flex" role="search">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Search</button>
@@ -32,3 +46,42 @@
       </div>
     </div>
 </nav>
+
+<div class="modal fade" id="addUser" tabindex="-1" aria-labelledby="logoutLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="logoutLabel">Logout</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="POST">
+        {% csrf_token %}
+      <div class="modal-body">
+          {{form|crispy}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary border-0 shadow-sm" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-sm">Add User</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="logoutUser" tabindex="-1" aria-labelledby="logoutLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="logoutLabel">Logout</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to logout?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary border-0 shadow-sm" data-bs-dismiss="modal">No</button>
+        <a href="{% url 'logout' %}" class="btn btn-outline-primary border-0 shadow-sm">Yes</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -6,7 +6,7 @@
   {% include 'includes/messages.html' %}
 {% endif %}
 <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-12">
         <div class="card border-0 shadow-sm mt-3">
             <div class="card-header">
                 <strong>Cart items</strong>
@@ -52,65 +52,13 @@
                 <div>
                     <h3>Total: PHP {{ cart.get_total_price  }}</h3>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6">
-        <div class="card border-0 shadow-sm mt-3">
-            <div class="card-header">
-                <strong>Order details</strong>
-                <a href="" class="btn btn-outline-primary btn-sm border-0 shadow-sm float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">Add customer</a>
-            </div>
-            <div class="card-body">
                 <form action="{% url 'store:process_order' %}" method="POST">
                     {% csrf_token %}
-                    <select class="form-select" aria-label="Default select example" name="customer_01">
-                        {% for customer in customers %}
-                        <option>{{customer}}</option>
-                        {% endfor %}
-                    </select>
-                    <!-- <div class="form-check mt-3">
-                        <input class="form-check-input" type="checkbox" name="is_paid" value="on" id="flexCheckDefault">
-                        <label class="form-check-label" for="flexCheckDefault">
-                          Paid
-                        </label>
-                    </div> -->
                     <input type="submit" value="Confirm order" class="btn btn-primary border-0 shadow-sm mt-4">
                 </form>
-                
             </div>
         </div>
     </div>
 </div>
-  
-  <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Add customer</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <form action="{% url 'store:add_customer' %}" method="POST">
-        {% csrf_token %}
-        <div class="modal-body">
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" name="name" id="floatingInput" placeholder="Name">
-                <label for="floatingInput">Name</label>
-            </div>
-            <div class="form-floating">
-                <input type="text" class="form-control" name="contact" id="floatingContact" placeholder="Contact">
-                <label for="floatingContact">Contact</label>
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary btn-sm border-0 shadow-sm" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-outline-primary btn-sm border-0 shadow-sm">Add customer</button>
-        </div>
-        </form>
-      </div>
-    </div>
-</div>
-
 
 {% endblock %}

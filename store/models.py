@@ -62,7 +62,7 @@ class Customer(models.Model):
     
 class OrderTransaction(models.Model):
     order_id = models.CharField(max_length=12, unique=True)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     price = models.FloatField()
     quantity = models.PositiveIntegerField()
@@ -70,6 +70,9 @@ class OrderTransaction(models.Model):
     is_paid = models.BooleanField(default=False)
     is_accepted = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-is_accepted','-created']
 
     @property
     def get_cost(self):
@@ -95,7 +98,7 @@ class OrderTransaction(models.Model):
         return now - datetime.timedelta(days=1) <= self.created <= now
 
     def __str__(self):
-        return self.customer.name
+        return self.customer.username
 
 class CustomerOrder(TimeStampedModel):
     order_id = models.CharField(max_length=100, unique=True)
@@ -108,7 +111,7 @@ class CustomerOrder(TimeStampedModel):
 
 
 class ItemRequest(models.Model):
-    request_by = models.CharField(max_length=120)
+    request_by = models.ForeignKey(User, on_delete=models.CASCADE)
     item_name = models.CharField(max_length=120)
     message = models.CharField(max_length=120, blank=True, null=True)
     is_noted = models.BooleanField(default=False)

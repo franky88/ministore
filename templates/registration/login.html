@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block login %}
+{% if messages %}
+  {% include 'includes/messages.html' %}
+{% endif %}
+<div class="row">
+    <div class="col-sm-4 offset-sm-4 mt-5">
+        <div class="card border-0 shadow-sm align-item-center">
+            <div class="card-body">
+                <!-- <img src="{% static 'img/AOG-logo_black.png' %}" alt="" style="width: 150px;"> -->
+                <h2>Mini Store</h2>
+                <div>
+                    {% if next %}
+                        {% if user.is_authenticated %}
+                            <p>Your account doesn't have access to this page. To proceed,
+                            please login with an account that has access.</p>
+                        {% else %}
+                            <p>Please login to see this page.</p>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header">
+                <strong>Login</strong>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'login' %}">
+                    <div>
+                        {% csrf_token %}
+                        {{form|crispy}}
+                    </div>
+                    <div>
+                        <input class="btn btn-primary btn-sm" type="submit" value="login" />
+                        <input type="hidden" name="next" value="{{ next }}" />
+                        <a href="{% url 'store:register_user' %}" class="float-end">Register account</a>
+                    </div>
+                    
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

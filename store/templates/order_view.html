@@ -5,7 +5,15 @@
   {% include 'includes/messages.html' %}
 {% endif %}
 <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-3">
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-body">
+                <strong>Remaining Balance:</strong>
+                <h2>PHP {{ balance }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-9">
         <div class="card border-0 shadow-sm mt-3">
             <div class="card-header">
                 <strong>Orders</strong>
@@ -30,7 +38,7 @@
                             <td>{{ order.created|date }}</td>
                             <td>
                                 {{order.product.name|title}} <br>
-                                <small class="text-muted">by {{order.customer.name|title}}</small>
+                                <small class="text-muted">by {{order.customer.username|title}}</small>
                             </td>
                             <td>PHP {{order.price}}</td>
                             <td>{{order.quantity}}</td>
@@ -46,13 +54,17 @@
                                 </small>
                             </td>
                             <td>
+                                
                                 {% if order.is_accepted %}
-                                Order Accepted
+                                <small class="text-muted">Order Accepted</small>
                                 {% else %}
-                                <form action="{% url 'store:accept_order' order.order_id %}" method="POST">
-                                    {% csrf_token %}
-                                    <input type="submit" class="btn btn-outline-primary btn-sm" value="Accept">
-                                </form>
+                                    {% if perms.store.update_ordertransaction %}
+                                        <form action="{% url 'store:accept_order' order.order_id %}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="submit" class="btn btn-outline-primary btn-sm" value="Accept">
+                                        </form>
+                                    {% endif %}
+                                    <small class="text-muted">Order Unaccepted</small>
                                 {% endif %}
                             </td>
                         </tr>

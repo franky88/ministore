@@ -2,7 +2,9 @@
 
 
 {% block content %}
-
+{% if messages %}
+  {% include 'includes/messages.html' %}
+{% endif %}
 <div class="row">
   <div class="col-sm-12 mt-3">
     <nav aria-label="breadcrumb">
@@ -18,10 +20,10 @@
         <div class="card border-0 shadow-sm mt-3">
             <div class="card-header">
                 <strong>Product Categories</strong>
-                {% if request.user.is_authenticated %}
+                {% if perms.store.add_category %}
                 <a class="btn btn-outline-primary btn-sm float-end border-0 shadow-sm" data-bs-toggle="modal" data-bs-target="#addCategory"><i class="fa-solid fa-plus"></i></a>
                 {% endif %}
-              </div>
+            </div>
             <div class="card-body">
               <ul class="list-group list-group-flush">
                 <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -47,16 +49,20 @@
               <div class="list-group-item list-group-item-action" aria-current="true">
                 <div class="d-flex w-100 justify-content-between">
                   <h5 class="mb-1">{{ req.item_name|title }}</h5>
+                  {% if req.request_by == request.user or request.user.is_superuser %}
                   <a href="{% url 'store:delete_request' req.pk %}" class="btn btn-outline-danger btn-sm float-end border-0">X</a>
+                  {% endif %}
                 </div>
                 <p class="mb-1">{{req.message}} <small><b>by: {{req.request_by|title}}</b></small> </p>
                 <small class="text-muted">Status: {% if req.is_noted %}Noted{% else %}Requested{% endif %}</small>
-                {% if not req.is_noted %}
-                <form action="{% url 'store:request_status_update' req.pk %}" class="float-end" method="POST">
-                  {% csrf_token %}
-                  <input type="submit" class="btn btn-outline-info btn-sm float-end border-0" value="Noted">
-                </form>
-                {% else %}
+                {% if perms.store.update_itemrequest %}
+                  {% if not req.is_noted %}
+                  <form action="{% url 'store:request_status_update' req.pk %}" class="float-end" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-outline-info btn-sm float-end border-0" value="Noted">
+                  </form>
+                  {% else %}
+                  {% endif %}
                 {% endif %}
               </div>
               {% endfor %}
@@ -69,7 +75,7 @@
       <div class="card border-0 shadow-sm mt-3">
           <div class="p-3">
               <strong>Products</strong>
-              {% if request.user.is_authenticated %}
+              {% if perms.store.add_product %}
               <a href="{% url 'store:add_product_view' %}" class="btn btn-outline-primary btn-sm float-end border-0 shadow-sm">Add product</a>
               {% endif %}
               <!-- <a href="" class="btn btn-outline-primary btn-sm float-end border-0 shadow-sm" data-bs-toggle="modal" data-bs-target="#addProduct">Add product</a> -->
@@ -116,8 +122,12 @@
                     <div class="card-footer pt-1 pb-1">
                         {% if product.quantity %}
                         {% if request.user.is_authenticated %}
-                        <a href="{% url 'store:delete_product' product.pk %}" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-trash-can"></i></a>
-                        <a href="{% url 'store:update_product' product.pk %}" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+                          {% if perms.store.delete_product %}
+                            <a href="{% url 'store:delete_product' product.pk %}" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-trash-can"></i></a>
+                          {% endif %}
+                          {% if perms.store.update_product %}
+                            <a href="{% url 'store:update_product' product.pk %}" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+                          {% endif %}
                         {% endif %}
                         <a href="{% url 'store:add_order' product.pk %}" class="btn btn-outline-info btn-sm float-end border-1 shadow-sm">Add to <i class="fa-solid fa-cart-plus"></i></a>
                         {% else %}
@@ -225,7 +235,6 @@
       <form action="{% url 'store:request_item' %}" method="POST">
       {% csrf_token %}
       <div class="modal-body">
-        <input class="form-control" type="text" placeholder="Request by" name="requester" required>
         <input class="form-control mt-2" type="text" placeholder="Product name" name="itemName" required>
         <input class="form-control mt-2" type="text" placeholder="Notes" name="message">
       </div>

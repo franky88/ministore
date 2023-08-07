@@ -4,9 +4,11 @@ from store.models import Product, Customer, OrderTransaction, CustomerOrder
 from django.views.decorators.http import require_POST
 from store.forms.customer_form import CustomerForm
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
+@login_required
 def product_order_view(request):
     products = Product.objects.all()
     cart = Cart(request)
@@ -23,6 +25,7 @@ def product_order_view(request):
     }
     return render(request, 'pos_view.html', context)
 
+@login_required
 def add_order_view(request, pk):
     cart = Cart(request)
     product = get_object_or_404(Product, pk=pk)
@@ -36,6 +39,7 @@ def clear_cart_items(request):
     cart.clear()
     return redirect('store:pos_view')
 
+@login_required
 @require_POST
 def cart_updated(request, bar_code):
     number = None
@@ -43,30 +47,27 @@ def cart_updated(request, bar_code):
     if request.method == 'POST':
         number = int(request.POST.get('number'))
     product = get_object_or_404(Product, bar_code=bar_code)
+    if number > product.quantity:
+        messages.add_message(request, messages.WARNING, 'Quantity not grater than %s.'%(product.quantity))
     cart.add(product=product, quantity=number, update_quantity=True)
     return redirect('store:pos_view')
 
+@login_required
 @require_POST
 def order_transaction(request):
     cart = Cart(request)
     if request.method == 'POST':
-        customer = request.POST.get('customer_01')
-        cus = get_object_or_404(Customer, name=customer)
-        is_paid = request.POST.get('is_paid')
-        if is_paid == None:
-            paid = False
-        else:
-            paid = True
         for item in cart:
             order = OrderTransaction(
-                customer = cus,
+                customer = request.user,
                 product = item['product'],
                 price = item['price'],
                 quantity = item['quantity'],
                 total_amount = cart.get_total_price(),
-                is_paid = paid
             )
-            
+            if order.product.quantity < order.quantity:
+                messages.add_message(request, messages.WARNING, 'Quantity not grater than %s.'%(order.product.quantity))
+                return redirect('store:pos_view')
             order.product.quantity -= order.quantity
             order.product.save()
             order.save()

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-body">
+                <h1>403 Error!</h1>
+                <small>You're not allowed to access this page. Please request administrator's access.</small><br>
+                <a href="{% url 'store:product_view' %}">Return to product page</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

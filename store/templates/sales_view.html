@@ -28,7 +28,6 @@
                             <th>Price</th>
                             <th>Quantity</th>
                             <th>Total cost</th>
-
                         </tr>
                     </thead>
                     <tbody>
@@ -37,7 +36,7 @@
                             <td>{{ order.created|date }}</td>
                             <td>{{order.product.name|title}}</td>
                             <td>
-                                <a href="{% url 'store:customer_details' order.customer.pk %}">{{order.customer.name|title}}</a></td>
+                                <a href="">{{ order.customer.username|title }}</a></td>
                             <td>PHP {{order.price}}</td>
                             <td>{{order.quantity}}</td>
                             <td>

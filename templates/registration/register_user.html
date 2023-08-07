@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block login %}
+<div class="row">
+    <div class="col-sm-4 offset-sm-4 mt-5">
+        <div class="card border-0 shadow-sm align-item-center">
+            <div class="card-body">
+                <!-- <img src="{% static 'img/AOG-logo_black.png' %}" alt="" style="width: 150px;"> -->
+                <h2>Mini Store</h2>
+                <small>Registration</small>
+                <div>
+                    {% if next %}
+                        {% if user.is_authenticated %}
+                            <p>Your account doesn't have access to this page. To proceed,
+                            please login with an account that has access.</p>
+                        {% else %}
+                            <p>Please login to see this page.</p>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header">
+                {{title|title}}
+            </div>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="card-body">
+                    {{form|crispy}}
+                </div>
+                <div class="card-footer">
+                    <a href="{{request.META.HTTP_REFERER}}" class="btn btn-outline-secondary btn-sm">Login</a>
+                    <button type="submit" class="btn btn-primary btn-sm">Register</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
