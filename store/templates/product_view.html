@@ -122,21 +122,44 @@
                     <div class="card-footer pt-1 pb-1">
                         {% if product.quantity %}
                         {% if request.user.is_authenticated %}
-                          {% if perms.store.delete_product %}
-                            <a href="{% url 'store:delete_product' product.pk %}" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-trash-can"></i></a>
-                          {% endif %}
-                          {% if perms.store.update_product %}
-                            <a href="{% url 'store:update_product' product.pk %}" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-pen-to-square"></i></a>
-                          {% endif %}
+                        <div class="d-flex gap-2">
+                            {% if perms.store.update_product %}
+                            <form action="{% url 'store:publish_unpublish_product' product.pk %}" method="POST">
+                              {% csrf_token %}
+                              <button type="submit" class="btn btn-outline-secondary btn-sm border-0 shadow-sm">
+                                {% if product.on_display %}
+                              <i class="fa-solid fa-eye" style="color: rgb(81, 162, 238);"></i>
+                              {% else %}
+                              <i class="fa-solid fa-eye-slash" style="color: rgb(252, 103, 103);"></i>
+                              {% endif %}
+                              </button>
+                            </form>
+                            {% endif %}
+                            {% if perms.store.update_product %}
+                              <a href="{% url 'store:update_product' product.pk %}" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+                            {% endif %}
+                          
                         {% endif %}
                         <a href="{% url 'store:add_order' product.pk %}" class="btn btn-outline-info btn-sm float-end border-1 shadow-sm">Add to <i class="fa-solid fa-cart-plus"></i></a>
+                        </div>
                         {% else %}
-                        <div>
-                            <a href="{% url 'store:delete_product' product.pk %}" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-trash-can"></i></a>
-                            <form action="{% url 'store:request_product_restock' product.pk%}" class="float-end" method="POST">
-                              {% csrf_token %}
-                              <input type="submit" class="btn btn-outline-info btn-sm border-0 shadow-sm" value="Request stock">
-                            </form>
+                        <div class="d-flex gap-2">
+                          {% if perms.store.update_product %}
+                          <form action="{% url 'store:publish_unpublish_product' product.pk %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-secondary btn-sm border-0 shadow-sm">
+                              {% if product.on_display %}
+                              <i class="fa-solid fa-eye" style="color: rgb(81, 162, 238);"></i>
+                              {% else %}
+                              <i class="fa-solid fa-eye-slash" style="color: rgb(252, 103, 103);"></i>
+                              {% endif %}
+                            </button>
+                          </form>
+                          {% endif %}
+                          <form action="{% url 'store:request_product_restock' product.pk%}" class="float-end" method="POST">
+                            {% csrf_token %}
+                            <input type="submit" class="btn btn-outline-info btn-sm border-0 shadow-sm" value="Request stock">
+                          </form>
                         </div>
                         {% endif %}
                     </div>

@@ -8,14 +8,18 @@ from django.db.models import Sum, Count, F
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib import messages
 
 # @require_POST
 
 @login_required
 def product_view(request):
-    print("sqliteversion", sqlite3.sqlite_version)
+    # print("sqliteversion", sqlite3.sqlite_version)
     form = AddProductForm(request.POST or None)
-    products = Product.objects.all()
+    if request.user.is_superuser:
+        products = Product.objects.all()
+    else:
+        products = Product.objects.filter(on_display=True)
     categories = Category.objects.annotate(count=Count('product__id'))
     all_requests = ItemRequest.objects.all()
     # total_product_category = categories.aggregate(total_count=Count('product__id'))
@@ -125,3 +129,22 @@ def delete_product(request, pk):
     instance = get_object_or_404(Product, pk=pk)
     instance.delete()
     return redirect('store:product_view')
+
+@login_required
+@require_POST
+@permission_required("store.update_product", raise_exception=True)
+def publish_unpublish_product(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == "POST":
+        if product.on_display:
+            product.on_display = False
+            product.save()
+        else:
+            product.on_display = True
+            product.save()
+        print(product.on_display)
+        if product.on_display:
+            messages.add_message(request, messages.SUCCESS, 'Product published successfully.')
+        else:
+            messages.add_message(request, messages.SUCCESS, 'Product unpublished successfully.')
+        return redirect('store:product_view')
