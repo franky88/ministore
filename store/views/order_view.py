@@ -71,6 +71,20 @@ def accept_order(request, order_id):
 
 @login_required
 @require_POST
+# @permission_required("store.update_ordertransaction", raise_exception=True)
+def cancel_order(request, order_id):
+    instance = get_object_or_404(OrderTransaction, order_id=order_id)
+    if request.method == 'POST':
+        instance.is_accepted = False
+        instance.product.quantity += instance.quantity
+        instance.product.save()
+        instance.save()
+        instance.delete()
+    messages.add_message(request, messages.SUCCESS, 'Order cancelled.')
+    return redirect('store:order_view')
+
+@login_required
+@require_POST
 @permission_required("store.update_ordertransaction", raise_exception=True)
 def pay_balance(request, pk):
     customer = get_object_or_404(User, pk=pk)

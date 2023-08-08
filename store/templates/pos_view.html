@@ -10,7 +10,9 @@
         <div class="card border-0 shadow-sm mt-3">
             <div class="card-header">
                 <strong>Cart items</strong>
-                <a href="{% url 'store:clear_order' %}" class="btn btn-outline-danger btn-sm border-0 shadow-sm float-end">Clear cart</a>
+                {% if cart %}
+                    <a href="{% url 'store:clear_order' %}" class="btn btn-outline-danger btn-sm border-0 shadow-sm float-end">Clear cart</a>
+                {% endif %}
             </div>
             <div class="card-body">
                 <table class="table table-sm">
@@ -42,7 +44,10 @@
                                     </form>
                                 </td>
                                 <td>
-                                    <a href="#" title="Remove" class="btn btn-outline-danger btn-sm border-0 shadow-sm"><i class="fa-regular fa-trash-can"></i></a>
+                                    <form action="{% url 'store:remove_cart_item' product.bar_code %}" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit" title="Remove" class="btn btn-outline-danger btn-sm border-0 shadow-sm"><i class="fa-regular fa-trash-can"></i></button>
+                                    </form>
                                 </td>
                             </tr>
                             {% endwith %}
@@ -52,10 +57,12 @@
                 <div>
                     <h3>Total: PHP {{ cart.get_total_price  }}</h3>
                 </div>
+                {% if cart %}
                 <form action="{% url 'store:process_order' %}" method="POST">
                     {% csrf_token %}
                     <input type="submit" value="Confirm order" class="btn btn-primary border-0 shadow-sm mt-4">
                 </form>
+                {% endif %}
             </div>
         </div>
     </div>

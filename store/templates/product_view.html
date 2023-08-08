@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load crispy_forms_tags %}
 
 {% block content %}
 {% if messages %}
@@ -75,9 +75,14 @@
       <div class="card border-0 shadow-sm mt-3">
           <div class="p-3">
               <strong>Products</strong>
-              {% if perms.store.add_product %}
-              <a href="{% url 'store:add_product_view' %}" class="btn btn-outline-primary btn-sm float-end border-0 shadow-sm">Add product</a>
+              <div class="d-flex gap-2 float-end">
+              {% if perms.store.add_producttransaction %}
+                <a class="btn btn-outline-primary btn-sm border-0 shadow-sm" data-bs-toggle="modal" data-bs-target="#updateProductQuantity">Add quantity</a>
               {% endif %}
+              {% if perms.store.add_product %}
+                <button class="btn btn-outline-primary btn-sm border-0 shadow-sm" data-bs-toggle="modal" data-bs-target="#addProduct">Add product</button>
+              {% endif %}
+              </div>
               <!-- <a href="" class="btn btn-outline-primary btn-sm float-end border-0 shadow-sm" data-bs-toggle="modal" data-bs-target="#addProduct">Add product</a> -->
           </div>
           <div class="card-body">
@@ -95,25 +100,17 @@
                     <img style="max-width: 100%; height: auto;" src="{{ product.image.url }}" class="card-img-top" alt="...">
                     {% endif %}
                     <div class="card-body d-flex flex-column">
-                      <h5 class="card-title d-flex align-items-end">{{ product.name|title }}</h5>
+                      <h5 class="card-title d-flex align-items-end">{{ product.name|title }} <br> @ ₱{{ product.price }}</h5>
                       <div class="row">
-                        <div class="col-sm-6 mb-2">
-                            <div class="card border-primary">
+                        <div class="col-sm-12 mb-2">
+                            <div class="card border-0">
                                 <div class="card-body p-1">
                                     {% if not product.quantity %}
                                     <small class="text-muted">Out of stock, stocking soon!</small>
                                     {% else %}
-                                    <small>On stock:</small><br>
+                                    <small>On stock:</small>
                                     <strong>{{ product.quantity }}</strong>
                                     {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="card border-info">
-                                <div class="card-body p-1">
-                                    <small>Price:</small><br>
-                                    <strong>PHP {{ product.price }}</strong>
                                 </div>
                             </div>
                         </div>
@@ -128,17 +125,16 @@
                               {% csrf_token %}
                               <button type="submit" class="btn btn-outline-secondary btn-sm border-0 shadow-sm">
                                 {% if product.on_display %}
-                              <i class="fa-solid fa-eye" style="color: rgb(81, 162, 238);"></i>
-                              {% else %}
-                              <i class="fa-solid fa-eye-slash" style="color: rgb(252, 103, 103);"></i>
-                              {% endif %}
+                                  <i class="fa-solid fa-eye" style="color: rgb(81, 162, 238);"></i>
+                                {% else %}
+                                  <i class="fa-solid fa-eye-slash" style="color: rgb(252, 103, 103);"></i>
+                                {% endif %}
                               </button>
                             </form>
                             {% endif %}
                             {% if perms.store.update_product %}
                               <a href="{% url 'store:update_product' product.pk %}" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-pen-to-square"></i></a>
                             {% endif %}
-                          
                         {% endif %}
                         <a href="{% url 'store:add_order' product.pk %}" class="btn btn-outline-info btn-sm float-end border-1 shadow-sm">Add to <i class="fa-solid fa-cart-plus"></i></a>
                         </div>
@@ -155,6 +151,9 @@
                               {% endif %}
                             </button>
                           </form>
+                          {% endif %}
+                          {% if perms.store.update_product %}
+                            <a href="{% url 'store:update_product' product.pk %}" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-pen-to-square"></i></a>
                           {% endif %}
                           <form action="{% url 'store:request_product_restock' product.pk%}" class="float-end" method="POST">
                             {% csrf_token %}
@@ -208,15 +207,15 @@
         <form action="" method="POST">
         {% csrf_token %}
         <div class="modal-body">
-          <div class="input-group mb-2">
+          <!-- <div class="input-group mb-2">
             <input type="text" class="form-control" placeholder="Barcode" aria-label="bar code" aria-describedby="button-addon2" name="barcode">
             <a href="" class="btn btn-outline-secondary btn-sm" id="button-addon2" data-bs-toggle="modal" data-bs-target="#barcodeScanner"><i class="fa-solid fa-barcode"></i> Scan</a>
-          </div>
-            {{form.name}}
-            {{form.cost}}
+          </div> -->
+            {{form|crispy}}
+            <!-- {{form.cost}}
             {{form.price}}
             {{form.quantity}}
-            {{form.category}}
+            {{form.category}} -->
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary border-0 shadow-sm" data-bs-dismiss="modal">Close</button>
@@ -225,6 +224,35 @@
         </form>
       </div>
     </div>
+</div>
+
+<div class="modal fade" id="updateProductQuantity" tabindex="-1" aria-labelledby="addProductLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addProductLabel">Add stock quantity</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="" method="POST">
+      {% csrf_token %}
+      <div class="modal-body">
+        <!-- <div class="input-group mb-2">
+          <input type="text" class="form-control" placeholder="Barcode" aria-label="bar code" aria-describedby="button-addon2" name="barcode">
+          <a href="" class="btn btn-outline-secondary btn-sm" id="button-addon2" data-bs-toggle="modal" data-bs-target="#barcodeScanner"><i class="fa-solid fa-barcode"></i> Scan</a>
+        </div> -->
+          {{product_transaction_form|crispy}}
+          <!-- {{form.cost}}
+          {{form.price}}
+          {{form.quantity}}
+          {{form.category}} -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary border-0 shadow-sm" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-outline-primary border-0 shadow-sm">Add product</button>
+      </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="addCategoryLabel" aria-hidden="true">

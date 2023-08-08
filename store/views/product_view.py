@@ -1,7 +1,7 @@
 import sqlite3
 from django.shortcuts import render, get_object_or_404, redirect
 from store.models import Product, Category, ItemRequest
-from store.forms.product_form import AddProductForm, UpdateProductForm
+from store.forms.product_form import AddProductForm, UpdateProductForm, ProductTransactionForm
 from store.cartitem import Cart
 from django.views.decorators.http import require_POST
 from django.db.models import Sum, Count, F
@@ -18,21 +18,34 @@ def product_view(request):
     form = AddProductForm(request.POST or None)
     if request.user.is_superuser:
         products = Product.objects.all()
+        categories = Category.objects.annotate(count=Count('product__id'))
     else:
         products = Product.objects.filter(on_display=True)
-    categories = Category.objects.annotate(count=Count('product__id'))
+        categories = Category.objects.filter(product__on_display=True).annotate(count=Count('product__id'))
     all_requests = ItemRequest.objects.all()
     # total_product_category = categories.aggregate(total_count=Count('product__id'))
+    product_transaction_form = ProductTransactionForm(request.POST or None)
     query = request.GET.get('q')
     
     cart = Cart(request)
     cart_items = cart.__len__()
     
     if request.method == 'POST':
-        barcode = request.POST.get('barcode')
+        if product_transaction_form.is_valid():
+            obj = product_transaction_form.save(commit=False)
+            obj.user = request.user
+            obj.product.quantity += obj.quantity
+            if obj.cost:
+                obj.product.cost = obj.new_cost
+            else:
+                obj.cost = obj.product.cost
+            obj.product.save()
+            obj.save()
+            return redirect('store:product_view')
+
+    if request.method == 'POST':
         if form.is_valid():
             obj = form.save(commit=False)
-            obj.bar_code = barcode
             obj.user = request.user
             obj.save()
             return redirect('store:product_view')
@@ -71,29 +84,27 @@ def product_view(request):
         "all_requests": all_requests,
         "breadcrumbs_link": breadcrumbs_link,
         "page_obj": page_obj,
+        "product_transaction_form": product_transaction_form
     }
     return render(request, 'product_view.html', context)
 
 @login_required
 @permission_required("store.add_product", raise_exception=True)
-def add_product(request):
-    form = AddProductForm(request.POST or None, request.FILES or None)
+def add_stock_quantity(request):
+    product_transaction_form = ProductTransactionForm(request.POST or None)
 
     cart = Cart(request)
     cart_items = cart.__len__()
 
     if request.method == 'POST':
-        barcode = request.POST.get('barcode')
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.bar_code = barcode
+        if product_transaction_form.is_valid():
+            obj = product_transaction_form.save(commit=False)
             obj.user = request.user
             obj.save()
             return redirect('store:product_view')
-
     context = {
         "title": "add product",
-        "form": form,
+        "product_transaction_form": product_transaction_form,
         "cart_items": cart_items
     }
     print(dir(Product.objects))

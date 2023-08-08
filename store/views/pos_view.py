@@ -54,6 +54,15 @@ def cart_updated(request, bar_code):
 
 @login_required
 @require_POST
+def remove_cart_item(request, bar_code):
+    cart = Cart(request)
+    product = get_object_or_404(Product, bar_code=bar_code)
+    cart.remove(product=product)
+    messages.add_message(request, messages.SUCCESS, 'Item removed successfully.')
+    return redirect('store:pos_view')
+
+@login_required
+@require_POST
 def order_transaction(request):
     cart = Cart(request)
     if request.method == 'POST':

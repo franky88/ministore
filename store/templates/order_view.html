@@ -58,13 +58,18 @@
                                 {% if order.is_accepted %}
                                 <small class="text-muted">Order Accepted</small>
                                 {% else %}
+                                <div class="d-flex gap-2">
                                     {% if perms.store.update_ordertransaction %}
                                         <form action="{% url 'store:accept_order' order.order_id %}" method="POST">
                                             {% csrf_token %}
                                             <input type="submit" class="btn btn-outline-primary btn-sm" value="Accept">
                                         </form>
                                     {% endif %}
-                                    <small class="text-muted">Order Unaccepted</small>
+                                    <form action="{% url 'store:cancel_order' order.order_id %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="submit" class="btn btn-outline-secondary btn-sm" value="Cancel">
+                                    </form>
+                                </div>
                                 {% endif %}
                             </td>
                         </tr>
