@@ -4,7 +4,7 @@ from .views.product_view import product_view, delete_product, update_product, pu
 from .views.order_view import sales_view, pay_balance, pay_order, sales_details, order_view, accept_order, cancel_order
 from .views.customer_view import customer_view, customer_detail_view, update_customer
 from .views.category_view import add_category
-from .views.item_request_view import request_item, delete_request, request_product_restock, request_status_update
+from .views.item_request_view import request_item, delete_request, request_product_restock, request_status_update, item_request_view
 from .views.user_view import register_user
 
 
@@ -28,10 +28,11 @@ urlpatterns = [
     path('update/<pk>', update_product, name='update_product'),
     path('publish/update/<pk>', publish_unpublish_product, name='publish_unpublish_product'),
     path('delete/<pk>', delete_product, name='delete_product'),
+    path('request', item_request_view, name='item_request_view'),
     path('request/item', request_item, name='request_item'),
     path('request/item/restock/<pk>', request_product_restock, name='request_product_restock'),
     path('request/item/delete/<pk>', delete_request, name='delete_request'),
-    path('equest/item/update/<pk>', request_status_update, name='request_status_update'),
+    path('request/item/update/<pk>', request_status_update, name='request_status_update'),
     path('customers', customer_view, name='customer_view'),
     path('customers/update/<pk>', update_customer, name='update_customer'),
     path('customers/details/<pk>', customer_detail_view, name='customer_details'),

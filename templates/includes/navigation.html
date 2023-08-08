@@ -25,6 +25,11 @@
             <a class="nav-link" aria-current="page" href="{% url 'store:customer_view' %}">Customers</a>
           </li>
           {% endif %}
+          {% if perms.store.view_itemrequest %}
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="{% url 'store:item_request_view' %}">Requested stocks</a>
+          </li>
+          {% endif %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'store:pos_view' %}">Cart {% if cart_items > 1 %}items <span class="badge text-bg-success"> {{ cart_items }}{% else %}item <span class="badge text-bg-secondary"> {{ cart_items }}{% endif %}</span></a>
           </li>

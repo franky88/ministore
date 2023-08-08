@@ -3,7 +3,24 @@ from store.models import ItemRequest, Product
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
+from store.cartitem import Cart
 # from django.db.models import Sum, F
+
+
+@login_required
+@permission_required('store.view_itemrequest', raise_exception=True)
+def item_request_view(request):
+    item_request = ItemRequest.objects.filter(is_noted=True)
+
+    cart = Cart(request)
+    cart_items = cart.__len__()
+
+    context = {
+        'title': 'request items',
+        'item_request': item_request,
+        'cart_items': cart_items
+    }
+    return render(request, 'item_request_view.html', context)
 
 @login_required
 @require_POST

@@ -84,7 +84,8 @@ def product_view(request):
         "all_requests": all_requests,
         "breadcrumbs_link": breadcrumbs_link,
         "page_obj": page_obj,
-        "product_transaction_form": product_transaction_form
+        "product_transaction_form": product_transaction_form,
+        "query": query
     }
     return render(request, 'product_view.html', context)
 
