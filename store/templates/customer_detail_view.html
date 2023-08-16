@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 {% if messages %}
@@ -114,23 +115,10 @@
           <h1 class="modal-title fs-5" id="updateCustomerLabel">Add customer</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form action="{% url 'store:update_customer' customer.pk %}" method="POST">
+        <form method="POST">
         {% csrf_token %}
         <div class="modal-body">
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" name="name" id="floatingInput" placeholder="Name" value="{{customer.name}}">
-                <label for="floatingInput">Name</label>
-            </div>
-            <div class="form-floating">
-                <input type="text" class="form-control" name="contact" id="floatingContact" placeholder="Contact" value="{{customer.contact}}">
-                <label for="floatingContact">Contact</label>
-            </div>
-            <div class="form-check mt-2">
-                <input class="form-check-input" name="isactive" type="checkbox" value="" id="flexCheckChecked" {% if customer.is_active %}checked{% else %}{% endif %}>
-                <label class="form-check-label" for="flexCheckChecked">
-                  Is active
-                </label>
-            </div>
+            {{form|crispy}}
             <!-- <input type="checkbox" class="form-control" name="contact" placeholder="Contact" value="{{customer.is_active}}"> -->
         </div>
         <div class="modal-footer">

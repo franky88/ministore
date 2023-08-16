@@ -46,24 +46,28 @@
               {% endif %}
           </div>
           <div class="card-body">
-              <div class="row row-cols-1 row-cols-md-4 g-4">
+              <table class="table table-striped table-sm" id="myTable">
+                <thead>
+                  <tr>
+                    <td>#</td>
+                    <th>Type</th>
+                    <th>Username</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
                   {% for customer in customers %}
-                  <div class="col">
-                    <div class="card">
-                      <div class="card-body">
-                        <h5 class="card-title">{{ customer.username|title }}</h5>
-                        <small>Balance: PHP {{ customer.total_balance }}</small>
-                      </div>
-                      <div class="card-footer pt-1 pb-1">
-                          <div>
-                            <!-- <a href="" class="btn btn-outline-secondary btn-sm border-0 shadow-sm"><i class="fa-solid fa-trash-can"></i></a> -->
-                            <a href="{% url 'store:customer_details' customer.pk %}" class="btn btn-outline-info btn-sm border-0 shadow-sm">View</a>
-                          </div>
-                      </div>
-                    </div>
-                  </div>
+                  <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{% if customer.is_superuser %}Admin{% else %}User{% endif %}</td>
+                    <td>{{ customer.username|title }}</td>
+                    <td>
+                      <a href="{% url 'store:customer_details' customer.pk %}" class="btn btn-outline-info btn-sm border-0 shadow-sm">View</a>
+                    </td>
+                  </tr>
                   {% endfor %}
-              </div>
+                </tbody>
+              </table>
           </div>
       </div>
   </div>

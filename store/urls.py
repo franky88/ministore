@@ -2,7 +2,7 @@ from django.urls import path
 from .views.pos_view import product_order_view, add_order_view, clear_cart_items, cart_updated, order_transaction, remove_cart_item
 from .views.product_view import product_view, delete_product, update_product, publish_unpublish_product
 from .views.order_view import sales_view, pay_balance, pay_order, sales_details, order_view, accept_order, cancel_order
-from .views.customer_view import customer_view, customer_detail_view, update_customer
+from .views.customer_view import customer_view, customer_detail_view
 from .views.category_view import add_category
 from .views.item_request_view import request_item, delete_request, request_product_restock, request_status_update, item_request_view
 from .views.user_view import register_user
@@ -34,7 +34,7 @@ urlpatterns = [
     path('request/item/delete/<pk>', delete_request, name='delete_request'),
     path('request/item/update/<pk>', request_status_update, name='request_status_update'),
     path('customers', customer_view, name='customer_view'),
-    path('customers/update/<pk>', update_customer, name='update_customer'),
+    # path('customers/update/<pk>', update_customer, name='update_customer'),
     path('customers/details/<pk>', customer_detail_view, name='customer_details'),
     path('process-order', order_transaction, name='process_order'),
     path('users/registration', register_user, name='register_user'),

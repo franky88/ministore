@@ -59,44 +59,33 @@ def customer_detail_view(request, pk):
     customer = get_object_or_404(User, pk=pk)
     unpaid_orders = OrderTransaction.objects.filter(customer=customer).filter(is_paid=False)
     total_unpaid_orders = unpaid_orders.aggregate(total_unpaid=(Sum(F('price') * F('quantity'))))
+    form = UserChangeForm(request.POST or None, instance=customer)
     cart = Cart(request)
     cart_items = cart.__len__()
+
+    if request.method == 'POST':
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+    
     context = {
         'title': 'customer details',
         'customer': customer,
         'cart_items': cart_items,
         'unpaid_orders': unpaid_orders,
-        'total_unpaid_orders': total_unpaid_orders['total_unpaid']
+        'total_unpaid_orders': total_unpaid_orders['total_unpaid'],
+        'form': form,
     }
     return render(request, 'customer_detail_view.html', context)
 
-@login_required
-@permission_required("store.update_user", raise_exception=True)
-def update_customer(request, pk):
-    customer = get_object_or_404(User, pk=pk)
+# @login_required
+# @permission_required("store.update_user", raise_exception=True)
+# def update_customer(request, pk):
+#     customer = get_object_or_404(User, pk=pk)
+#     form = UserChangeForm(request.POST or None, instance=customer)
 
-    cart = Cart(request)
-    cart_items = cart.__len__()
-
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        contact = request.POST.get('contact')
-        isactive = request.POST.get('isactive')
-        if isactive == None:
-            isactive = False
-        else:
-            isactive = True
-        print("is active",isactive)
-        customer.name = name
-        customer.contact = contact
-        customer.is_active = isactive
-        customer.save()
-        return redirect('store:customer_details', customer.customer_id)
-
-    context = {
-        'title': 'customer details',
-        'customer': customer,
-        'cart_items': cart_items,
-    }
-
-    return render(request, 'customer_detail_view.html', context)
+#     cart = Cart(request)
+#     cart_items = cart.__len__()
+#     # print(form)
+    
+#             return redirect('store:update_customer', pk=customer.pk)
