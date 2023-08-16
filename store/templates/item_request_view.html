@@ -19,6 +19,9 @@
                                 Product name
                             </th>
                             <th>Note</th>
+                            <th>
+                                status
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,6 +33,20 @@
                                 <small class="text-muted">by {{note.request_by.username|title}}</small>
                             </td>
                             <td>{{ note.message|title }}</td>
+                            <td>
+                                {% if note.is_noted %}
+                                Noted
+                                {% else %}
+                                    {% if perms.store.update_itemrequest %}
+                                    <form action="{% url 'store:request_status_update' note.pk %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="submit" class="btn btn-outline-primary btn-sm" value="Accept">
+                                    </form>
+                                    {% else %}
+                                    Requested
+                                    {% endif %}
+                                {% endif %}
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>

@@ -8,9 +8,9 @@ from store.cartitem import Cart
 
 
 @login_required
-@permission_required('store.view_itemrequest', raise_exception=True)
+# @permission_required('store.view_itemrequest', raise_exception=True)
 def item_request_view(request):
-    item_request = ItemRequest.objects.filter(is_noted=True)
+    item_request = ItemRequest.objects.all()
 
     cart = Cart(request)
     cart_items = cart.__len__()

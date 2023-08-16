@@ -14,7 +14,6 @@ from django.contrib import messages
 
 @login_required
 def product_view(request):
-    # print("sqliteversion", sqlite3.sqlite_version)
     form = AddProductForm(request.POST or None)
     if request.user.is_superuser:
         products = Product.objects.all()
@@ -22,7 +21,7 @@ def product_view(request):
     else:
         products = Product.objects.filter(on_display=True)
         categories = Category.objects.filter(product__on_display=True).annotate(count=Count('product__id'))
-    all_requests = ItemRequest.objects.all()
+    all_requests = ItemRequest.objects.all()[:3]
     # total_product_category = categories.aggregate(total_count=Count('product__id'))
     product_transaction_form = ProductTransactionForm(request.POST or None)
     query = request.GET.get('q')
@@ -64,7 +63,7 @@ def product_view(request):
     else:
         breadcrumbs_link = "All Tasks"
 
-    paginator = Paginator(products, 8)
+    paginator = Paginator(products, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
